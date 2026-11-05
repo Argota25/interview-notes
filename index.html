@@ -7,68 +7,111 @@
 <style>
   :root {
     --ink: #1c2430; --muted: #5d6b7a; --line: #dde3ea; --bg: #f5f7f9; --card: #ffffff;
-    --accent: #0f6e6e; --accent-soft: #e3f1f1; --mark: #fff1b8; --warn: #9a5b00;
+    --accent: #0f6e6e; --accent-soft: #e3f1f1; --mark: #fff1b8; --warn: #9a5b00; --warn-soft: #fff5e0;
+    --bad: #a3332b; --bad-soft: #fdecea; --good: #2f6b2f; --good-soft: #e8f4e8;
   }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.5; font-size: 15px; }
-  header { background: var(--card); border-bottom: 1px solid var(--line); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  header h1 { font-size: 19px; margin: 0; font-weight: 650; }
-  header p { margin: 0; color: var(--muted); font-size: 13px; }
-  main { max-width: 1240px; margin: 0 auto; padding: 20px 24px 60px; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 20; }
+  header h1 { font-size: 18px; margin: 0; font-weight: 650; }
+  header p { margin: 0; color: var(--muted); font-size: 12.5px; }
+  nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  nav button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  main { max-width: 1280px; margin: 0 auto; padding: 20px 24px 60px; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
   h2 { font-size: 16px; margin: 0 0 10px; font-weight: 650; }
   h3 { font-size: 14px; margin: 0 0 6px; font-weight: 650; }
-  .muted { color: var(--muted); }
-  .small { font-size: 13px; }
-  button { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 8px 14px; border-radius: 7px; cursor: pointer; }
+  .muted { color: var(--muted); } .small { font-size: 13px; } .tiny { font-size: 12px; }
+  button { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 7px 13px; border-radius: 7px; cursor: pointer; }
   button:hover { border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
   button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  button.primary:hover { filter: brightness(1.08); }
-  textarea, input, select { font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; width: 100%; background: #fff; color: var(--ink); }
+  button.link { border: 0; background: none; color: var(--accent); padding: 0; font-size: 13px; }
+  button.danger { color: var(--bad); }
+  textarea, input, select { font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; width: 100%; background: #fff; color: var(--ink); }
+  input[type=checkbox] { width: auto; }
   textarea { resize: vertical; }
+  label.f { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
   .drop { border: 2px dashed var(--line); border-radius: 10px; padding: 22px; text-align: center; color: var(--muted); margin-bottom: 12px; }
   .drop.over { border-color: var(--accent); background: var(--accent-soft); }
   .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
-  .side { position: sticky; top: 16px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; align-items: start; }
+  .side { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; }
   .fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  .fields label, .side label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
-  .stats { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 12px; }
-  .stat b { display: block; font-size: 20px; }
+  .stats { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 12px; }
+  .stat b { display: block; font-size: 19px; }
   .stat span { font-size: 12px; color: var(--muted); }
+  .banner { border-radius: 8px; padding: 10px 14px; font-size: 13.5px; margin-bottom: 12px; }
+  .banner.info { background: var(--accent-soft); color: #0b4f4f; }
+  .banner.warn { background: var(--warn-soft); color: var(--warn); }
+  .banner.bad { background: var(--bad-soft); color: var(--bad); }
   .qa { border-top: 1px solid var(--line); padding: 14px 0; }
-  .qa:first-of-type { border-top: 0; padding-top: 4px; }
+  .qa:first-child { border-top: 0; padding-top: 2px; }
   .qhead { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-  .time { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 42px; }
+  .time { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 40px; display: inline-block; }
   .q { font-weight: 600; }
-  .tag { display: inline-block; font-size: 11.5px; padding: 1px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); margin: 2px 4px 0 0; white-space: nowrap; }
-  .tag.cat { background: #eef0f3; color: var(--muted); }
-  .tag.star { background: #fff5e0; color: var(--warn); }
-  ul.points { margin: 8px 0 4px 50px; padding-left: 16px; }
+  .probe { margin: 4px 0 0 48px; font-size: 13.5px; color: var(--muted); }
+  .indent { margin-left: 48px; }
+  .chip { display: inline-block; font-size: 11.5px; padding: 1px 8px; border-radius: 99px; margin: 3px 4px 0 0; white-space: nowrap; }
+  .chip.good { background: var(--good-soft); color: var(--good); }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); }
+  .chip.cat { background: #eef0f3; color: var(--muted); }
+  .chip.plan { background: var(--accent-soft); color: var(--accent); }
+  ul.points { margin: 8px 0 4px 48px; padding-left: 16px; }
   ul.points li { margin-bottom: 4px; }
-  details { margin: 4px 0 0 50px; }
+  .sent { cursor: pointer; border-radius: 3px; }
+  .sent:hover { background: var(--accent-soft); }
+  .sent.picked { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+  .prompt { margin: 6px 0 0 48px; font-size: 13px; color: var(--warn); }
+  details { margin-top: 4px; }
+  details.indent { margin-left: 48px; }
   details summary { cursor: pointer; color: var(--accent); font-size: 13px; }
-  .full { white-space: pre-wrap; font-size: 13.5px; background: var(--bg); border-radius: 7px; padding: 10px 12px; margin-top: 6px; }
-  .full .who { font-weight: 600; }
+  .full { font-size: 13.5px; background: var(--bg); border-radius: 7px; padding: 10px 12px; margin-top: 6px; }
+  .full div { margin-bottom: 4px; }
+  .who { font-weight: 600; }
   mark { background: var(--mark); color: inherit; padding: 0 2px; border-radius: 3px; }
-  .value { border-top: 1px solid var(--line); padding: 10px 0; }
+  .value { border-top: 1px solid var(--line); padding: 12px 0; }
   .value:first-child { border-top: 0; padding-top: 0; }
-  .rate { display: flex; gap: 4px; margin: 6px 0; }
+  .rate { display: flex; gap: 4px; margin: 6px 0; flex-wrap: wrap; }
   .rate button { padding: 3px 0; width: 34px; font-size: 13px; }
   .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .evidence { font-size: 12.5px; color: var(--muted); margin: 4px 0 6px; }
-  .evidence div { margin-bottom: 3px; }
-  .facts li { margin-bottom: 5px; }
-  .hidden { display: none; }
-  .note-help { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
-  ol.steps { margin: 6px 0 0; padding-left: 20px; }
-  ol.steps li { margin-bottom: 4px; }
-  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 8px 16px; border-radius: 7px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .anchors { font-size: 12.3px; color: var(--muted); margin: 4px 0; }
+  .anchors div { margin-bottom: 3px; }
+  .anchors b { color: var(--ink); }
+  .anchors .hit { background: var(--accent-soft); border-radius: 5px; padding: 2px 5px; color: var(--ink); }
+  .ev { font-size: 12.5px; margin: 4px 0; }
+  .ev div { margin-bottom: 3px; display: flex; gap: 6px; align-items: baseline; }
+  .ev .x { color: var(--bad); cursor: pointer; border: 0; background: none; padding: 0 2px; font-size: 13px; }
+  .sugg { font-size: 12.3px; color: var(--muted); }
+  .sugg div { margin-bottom: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); font-weight: 600; }
+  tr.click { cursor: pointer; } tr.click:hover td { background: var(--bg); }
+  .pill { display: inline-block; font-size: 12px; padding: 1px 9px; border-radius: 99px; background: #eef0f3; }
+  .pill.sa { background: var(--good); color: #fff; } .pill.a { background: var(--good-soft); color: var(--good); }
+  .pill.p { background: var(--bad-soft); color: var(--bad); } .pill.sp { background: var(--bad); color: #fff; }
+  .cov li { margin-bottom: 4px; }
+  .ok { color: var(--good); font-weight: 600; } .part { color: var(--warn); font-weight: 600; } .miss { color: var(--bad); font-weight: 600; }
+  .guide-q { border-top: 1px solid var(--line); padding: 10px 0; display: grid; grid-template-columns: 26px 1fr; gap: 8px; }
+  .guide-q:first-of-type { border-top: 0; }
+  .menu { position: absolute; z-index: 50; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.12); padding: 6px; display: none; }
+  .menu button { display: block; width: 100%; text-align: left; border: 0; padding: 6px 10px; font-size: 13px; }
+  .menu button:hover { background: var(--accent-soft); }
+  .menu .t { font-size: 11.5px; color: var(--muted); padding: 2px 10px 4px; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 8px 16px; border-radius: 7px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 60; }
   .toast.show { opacity: 1; }
-  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } .side { position: static; } .fields { grid-template-columns: 1fr 1fr; } }
+  .hidden { display: none !important; }
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .skill { border-top: 1px solid var(--line); padding: 8px 0; }
+  .skill:first-child { border-top: 0; }
+  .log { font-size: 12px; color: var(--muted); }
+  @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } .side { position: static; max-height: none; } .fields { grid-template-columns: 1fr 1fr; } .twocol { grid-template-columns: 1fr; } }
   @media print {
-    header .row, #inputCard, .no-print, details summary { display: none !important; }
-    body { background: #fff; } .card { border: 0; padding: 0; } .grid { grid-template-columns: 1fr; } details { display: block; }
+    header, .no-print, details summary, .menu, .toast { display: none !important; }
+    body { background: #fff; } .card { border: 0; padding: 0 0 12px; } .grid { grid-template-columns: 1fr; } .side { position: static; max-height: none; overflow: visible; }
+    details > *:not(summary) { display: block !important; }
+    .guide-q:has(input:not(:checked)) { display: none; }
   }
 </style>
 </head>
@@ -76,117 +119,268 @@
 <header>
   <div>
     <h1>Interview Notes</h1>
-    <p>Turns a Teams transcript into organized interview notes. Runs in your browser; nothing is uploaded.</p>
+    <p>Teams transcript in, structured interview notes out. Runs in your browser. Nothing is uploaded. It never scores a candidate; you do.</p>
   </div>
-  <div class="row">
-    <button id="newBtn" class="hidden">New interview</button>
-  </div>
+  <nav>
+    <button data-view="library">Interviews</button>
+    <button data-view="guide">Interview guide</button>
+    <button data-view="compare">Compare</button>
+    <button class="primary" id="newBtn">New interview</button>
+  </nav>
 </header>
 
 <main>
-  <section class="card" id="inputCard">
-    <h2>1. Add the transcript</h2>
-    <div class="drop" id="drop">Drop the Teams transcript file here (.vtt, .txt, or .docx)<br><span class="small">or paste the transcript text below</span></div>
-    <textarea id="raw" rows="7" placeholder="Paste the transcript here..."></textarea>
-    <div class="row" style="margin-top:10px">
-      <button class="primary" id="goBtn">Organize notes</button>
-      <input type="file" id="file" accept=".vtt,.txt,.docx" class="hidden">
-      <button id="pickBtn">Choose file</button>
-      <button id="sampleBtn">Try a sample</button>
-      <span id="msg" class="small muted"></span>
+  <div id="storeWarn" class="banner warn hidden">This browser is not saving. Copy your notes before you close the page.</div>
+
+  <!-- LIBRARY -->
+  <section id="v-library" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Saved interviews</h2>
+        <div class="row"><button id="csvBtn">Export all to CSV</button></div>
+      </div>
+      <p class="small muted">Interview notes are hiring records. Federal rules (29 CFR 1602.14) call for keeping them at least one year after the hiring decision, longer if a complaint is filed. Turn on Legal hold to keep one indefinitely. Nothing here deletes itself.</p>
+      <div id="patternNote"></div>
+      <div id="libTable"></div>
     </div>
-    <details style="margin:14px 0 0">
-      <summary>How to get the transcript from Microsoft Teams</summary>
-      <ol class="steps small">
-        <li>When the interview starts, tell the candidate the call is being transcribed for notes.</li>
-        <li>In the meeting, click <b>More (...)</b>, then <b>Record and transcribe</b>, then <b>Start transcription</b>. Teams shows everyone a notice that transcription is on.</li>
-        <li>After the call, open the meeting chat or the event in your Teams calendar and go to <b>Recap</b>, then <b>Transcript</b>.</li>
-        <li>Click <b>Download</b> and choose .vtt or .docx, then drop that file here.</li>
-      </ol>
-      <p class="small muted">If you don't see Start transcription, your IT admin controls that setting.</p>
-    </details>
   </section>
 
-  <div id="out" class="hidden">
-    <section class="card">
+  <!-- NEW -->
+  <section id="v-new" class="hidden">
+    <div class="card">
+      <h2>Add the transcript</h2>
+      <div class="banner info">Before the interview: tell the candidate the call is being transcribed for your notes. Florida requires consent from everyone on a recorded call (Fla. Stat. 934.03). Teams also shows a notice when transcription starts.</div>
+      <div class="drop" id="drop">Drop the Teams transcript here (.vtt, .docx or .txt)<br><span class="small">or paste the text below</span></div>
+      <textarea id="raw" rows="7" placeholder="Paste the transcript here..."></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="primary" id="goBtn">Organize notes</button>
+        <input type="file" id="file" accept=".vtt,.txt,.docx" class="hidden">
+        <button id="pickBtn">Choose file</button>
+        <button id="sampleBtn">Try a sample</button>
+        <span id="msg" class="small muted"></span>
+      </div>
+      <details style="margin-top:14px">
+        <summary>How to get the transcript from Microsoft Teams</summary>
+        <ol class="small" style="margin:6px 0 0;padding-left:20px">
+          <li>In the meeting, click <b>More (...)</b>, then <b>Record and transcribe</b>, then <b>Start transcription</b>.</li>
+          <li>After the call, open the meeting chat or the event in your Teams calendar, then <b>Recap</b>, then <b>Transcript</b>.</li>
+          <li>Click <b>Download</b> and choose .vtt or .docx. Drop that file here.</li>
+        </ol>
+        <p class="small muted">If Start transcription is missing, your IT admin controls that setting. Only the organizer can download the transcript; candidates who join as guests cannot.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <section id="v-guide" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Interview guide: Business Development Specialist</h2>
+        <div class="row no-print"><button id="guidePrint">Print guide</button><button id="guideReset">Reset to default plan</button></div>
+      </div>
+      <p class="small muted">Ask the checked questions in this order for every candidate in the same opening. Start with the two warm-up questions (not scored). Ask the probes when an answer has no personal action, no result or no number. The tool checks coverage against this list after each interview. Score 2 or 4 when an answer falls between the written anchors.</p>
+      <div id="guideBody"></div>
+      <p class="tiny muted">Questions and anchors are designed from SHRM emotional intelligence questions, Duckworth's grit research, Dweck's growth mindset work, HEXACO Honesty-Humility, Greenlit's coachability rubric, Prospeo's mock call rubric and Bridge Group benchmarks. They are a starting point, not a validated test. Swap in Rhythm's own definitions of each value when you have them.</p>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section id="v-compare" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Compare candidates</h2>
+        <div class="row"><label class="small muted">Role</label><select id="cmpRole" style="width:auto"></select></div>
+      </div>
+      <p class="small muted">Scores side by side for one opening. Score each interview on its own first, then compare; reading other scores first pulls your ratings toward them.</p>
+      <div id="cmpTable"></div>
+    </div>
+  </section>
+
+  <!-- INTERVIEW -->
+  <section id="v-interview" class="hidden">
+    <div class="card">
       <div class="fields">
-        <div><label>Candidate</label><select id="candSel"></select></div>
-        <div><label>Interviewer</label><select id="intSel"></select></div>
-        <div><label>Role</label><input id="role" placeholder="e.g. Business Development Specialist"></div>
-        <div><label>Date</label><input id="date" type="date"></div>
+        <div><label class="f">Candidate</label><select id="candSel"></select></div>
+        <div><label class="f">Interviewer</label><select id="intSel"></select></div>
+        <div><label class="f">Role</label><input id="role" placeholder="Business Development Specialist"></div>
+        <div><label class="f">Interview date</label><input id="date" type="date"></div>
       </div>
       <div class="stats" id="stats"></div>
-    </section>
+    </div>
+    <div id="guardBox"></div>
 
     <div class="grid">
       <div>
         <section class="card">
           <h2>Questions and answers</h2>
-          <p class="small muted" style="margin-top:-4px">Each question you asked, with the candidate's key points. Numbers are highlighted. Open "Full answer" for the exact words.</p>
+          <p class="small muted" style="margin-top:-4px">Click any candidate sentence to attach it as evidence to a score. Green chips mark what strong answers contain; amber chips mark what to probe. Chips point to lines; they never score.</p>
           <div id="qaList"></div>
         </section>
+        <section class="card" id="rpCard">
+          <h2>Role play and coachability</h2>
+          <div id="rpBody"></div>
+        </section>
         <section class="card">
-          <h2>Key facts and numbers the candidate gave</h2>
-          <ul class="facts" id="facts"></ul>
+          <h2>Sales numbers</h2>
+          <div id="metricsBody"></div>
+        </section>
+        <section class="card">
+          <h2>Planned question coverage</h2>
+          <div id="coverage"></div>
+        </section>
+        <section class="card">
+          <h2>Follow-up list for the next round</h2>
+          <ul class="cov" id="followups" style="padding-left:18px"></ul>
         </section>
         <section class="card">
           <h2>Questions the candidate asked</h2>
-          <ul class="facts" id="candQs"></ul>
+          <ul class="cov" id="candQs" style="padding-left:18px"></ul>
         </section>
       </div>
 
       <aside class="side">
         <section class="card">
           <h2>Scorecard</h2>
+          <div id="patternMine"></div>
           <div id="values"></div>
         </section>
         <section class="card">
           <h2>Decision</h2>
-          <label>Overall</label>
-          <div class="rate" id="overall"></div>
-          <label style="margin-top:8px">Recommendation</label>
-          <select id="rec"><option value="">Choose</option><option>Advance</option><option>Hold</option><option>Pass</option></select>
-          <label style="margin-top:10px">My notes</label>
-          <textarea id="myNotes" rows="5" placeholder="Anything else to remember..."></textarea>
+          <div id="decision"></div>
+          <label class="f" style="margin-top:12px">My notes</label>
+          <textarea id="myNotes" rows="4" placeholder="Write what was said, not opinions about the person."></textarea>
+          <div id="notesLint"></div>
           <div class="row" style="margin-top:12px">
-            <button class="primary" id="copyBtn">Copy notes</button>
+            <button class="primary" id="copyBtn">Copy debrief</button>
             <button id="dlBtn">Download .txt</button>
             <button id="printBtn">Print</button>
           </div>
-          <p class="note-help">Your ratings and notes save on this computer automatically.</p>
+          <div class="row" style="margin-top:12px">
+            <label class="small"><input type="checkbox" id="holdChk"> Legal hold</label>
+            <span class="small muted" id="keepUntil"></span>
+          </div>
+          <p class="tiny muted" style="margin-top:8px">Saved on this computer automatically.</p>
         </section>
       </aside>
     </div>
-  </div>
+  </section>
 </main>
+<div class="menu" id="menu"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// PARSER START
+// ================= DATA =================
 const VALUES = [
-  { key: "eq", name: "Emotional Intelligence", re: /\b(listen\w*|understand\w*|empath\w*|feel|feeling\w*|felt|rapport|relationship\w*|emotion\w*|connect\w*|patien(t|ce)|perspective)\b/i },
-  { key: "grit", name: "Grit", re: /\b(calls?|dial\w*|reject\w*|persist\w*|kept going|kept at|grind\w*|every day|daily|hard|tough|failed|failure|setback\w*|didn't give up|push(ed)? through|80|100)\b/i },
-  { key: "growth", name: "Growth Mindset", re: /\b(learn\w*|coach\w*|feedback|improv\w*|taught|teach\w*|mentor\w*|practic\w*|stud(y|ied)|curious|curiosity|adapt\w*)\b/i },
-  { key: "sincerity", name: "Sincerity", re: /\b(honest\w*|truth\w*|genuine\w*|sincer\w*|integrity|follow(ed)? through|trust\w*|promis\w*|care[ds]?|caring|right thing|transparen\w*)\b/i },
-  { key: "sales", name: "Sales and phone skills", re: /\b(pipeline|crm|prospect\w*|cold call\w*|quota|close[ds]?|closing|discovery|objection\w*|deal\w*|follow[- ]?up\w*|decision maker\w*|gatekeeper\w*|upsell\w*)\b/i }
+  { key: "eq", name: "Emotional Intelligence",
+    anchors: { 1: "No specific person or moment. Generic claims (\"I'm a people person\"). Customer described only as wrong or difficult. Same script for everyone.",
+               3: "A real situation. Names the customer's feeling and their own reaction, one calming move. Thin on the cues they read or how they adapted. Result vague.",
+               5: "Names concrete cues (tone shift, short answers, silence), how they handled their own reaction, labels the customer's feeling out loud, tailors the fix to that person, reports a result and a lesson they still use." },
+    signal: /\b(I noticed|I could (hear|tell)|went quiet|got (short|quiet)|they sounded|tone|frustrat\w*|upset|worried|angry|irritated|(they|she|he) felt|I felt|I paused|let (them|him|her) finish|didn'?t take it personally|it sounds like|I understand why|for (her|him|them) I|differently|calm(ed)? (down|them|her|him))\b/i },
+  { key: "grit", name: "Grit",
+    anchors: { 1: "Short horizons only. Switches goals, quits at first friction, blames circumstances. No numbers. \"I never give up\" with no story.",
+               3: "One real sustained effort with setbacks, but timeline or numbers are fuzzy. Outcome partial.",
+               5: "A multi-month or multi-year pursuit with a clear timeline, named setbacks, real counts (dials, attempts, months), a tactic change with the same goal, a finished result and a daily reset routine." },
+    signal: /\b(for (\w+ )?(months|years)|every (morning|day|week|single day)|the (\w+th|\d+(st|nd|rd|th)) (call|time|attempt|try)|\d+ (dials|calls|attempts|touches|tries)|kept (calling|going|at it|trying|pushing)|got told no|the next (week|day|month) I|still doing it|didn'?t quit|finally (closed|got|signed|booked))\b/i },
+  { key: "growth", name: "Growth Mindset",
+    anchors: { 1: "Failure is someone else's fault. Feedback described as unfair with no change. Fixed self-talk (\"I'm not a numbers person\"). Generic \"I'm open to feedback\" with no example.",
+               3: "Owns part of a failure and names a lesson, but the change in behavior is vague or untested.",
+               5: "Owns the failure with \"I\", names the old and new approach, who they asked for help, and a measurable change. Asks for feedback unprompted. Treats the outcome as data." },
+    signal: /\b(I practiced|I asked (for|my|a)|I tried a different|at first I|now I|I listened to my (own )?calls|I recorded|I shadowed|I learned|I studied|I changed (how|my)|I started (asking|doing|using)|coach(ed|ing) me)\b/i },
+  { key: "sincerity", name: "Sincerity",
+    anchors: { 1: "Cannot name a real mistake, or names a disguised strength. Treats bending a rule as smart (\"they never found out\"). Flattery as a tactic. Takes sole credit. Numbers don't add up.",
+               3: "A real mistake, admitted, but only after it was discovered or after a delay. Vague on the conversation. Some credit shared.",
+               5: "A real, costly mistake told early and unprompted. Quotes what they said. Accepts the cost. Won't overpromise (\"I told her I didn't know and would call back by 3\"). Credits others by name." },
+    signal: /\b(my mistake|I was wrong|I owned (it|up)|I messed up|I should have|I told (them|her|him|the customer) (right away|the truth|honestly|first)|right away|before they noticed|I called (them|her|him) first|I don'?t know|I'?ll find out|I couldn'?t promise|took the hit|lost the (sale|commission|deal)|wouldn'?t promise)\b/i },
+  { key: "coach", name: "Coachability",
+    anchors: { 1: "Dismissive or defensive about feedback. \"I think it went great\" or \"that's just my style\". No change in the second role play.",
+               3: "Some self-awareness but not specific. Receptive to feedback without clarifying it. Attempts the change; second take only slightly different.",
+               5: "Names their own gaps clearly after take 1. Asks clarifying questions about the coaching. Clearly uses the coached behavior in take 2." },
+    signal: /\b(I pitched too (early|fast|soon)|I talked (over|too much)|I should have asked|I rushed|so you mean|what would that sound like|let me try (that|again|it)|that makes sense|good point|I'?d change)\b/i },
+  { key: "sales", name: "Phone sales skills",
+    anchors: { 1: "Cannot state their numbers, or they don't add up. Knows nothing about Rhythm. Mock call: \"bad time?\" opener, pitches before asking questions, no ask. Would share patient names.",
+               3: "States dials or quota but unsure of conversion or attainment. Knows Rhythm sells medical equipment, can't name the buyer. Mock call: gives a reason, list questions, asks for a next step with no date.",
+               5: "States dials, conversations, meetings or orders, quota and attainment unprompted, and they add up. Names Rhythm's buyers (HME provider owners, purchasing). Mock call: clear reason in about 10 seconds, builds on answers, books a dated next step. Declines to share patient information." },
+    signal: /\b(pipeline|crm|salesforce|hubspot|quota|attainment|dials?|conversations|(meetings?|appointments?) (booked|set)|booked|follow[- ]?up|next step|decision maker|gatekeeper|objection|discovery|logged)\b/i }
 ];
-const CATS = [
-  ["Intro", /about yourself|walk me through|your background|introduce yourself/i],
-  ["Motivation", /why (rhythm|this|us|our|the role|sales|do you want|are you|leave|leaving)|what interests|what drew|what attracted/i],
-  ["Behavioral", /time (when|you|that)|an example|tell me about a|describe a (situation|time)|share a/i],
-  ["Situational", /what would you|how would you|if you (were|had|got)|imagine/i],
-  ["Logistics", /salary|compensation|pay|start date|when can you start|availab|commute|in office|in-office|schedule|relocat|background check/i],
-  ["Sales skills", /cold call|dials?|objection|pipeline|quota|crm|clos(e|ing)|prospect|rejection|phone/i],
-  ["Wrap up", /questions for (me|us)|anything else|any questions/i]
+const VKEYS = VALUES.map(v => v.key);
+
+const BANK = [
+  { key: "warm", name: "Warm-up (not scored)", qs: [
+    { id: "W1", q: "Tell me a bit about yourself.", probes: [] },
+    { id: "W2", q: "What drew you to this role at Rhythm?", probes: [] } ] },
+  { key: "eq", name: "Emotional Intelligence", qs: [
+    { id: "EQ1", q: "Tell me about a phone call where you realized partway through that the person on the other end was not happy, even though they never said so. What tipped you off?", probes: ["What exactly did they say, word for word if you remember?", "What did you change in the next 30 seconds, and what happened?"] },
+    { id: "EQ2", q: "Tell me about a time you had to give the same bad news, like a backorder or a price increase, to several customers. How did each conversation differ?", probes: ["Pick two of them. What did you say differently to each, and why?", "How did you know it landed?"] },
+    { id: "EQ3", q: "Tell me about feedback that surprised you.", probes: ["Why did it surprise you?", "What do you do differently now because of it?"] },
+    { id: "EQ4", q: "Tell me about a time something was better left unsaid.", probes: ["What did you want to say?", "What did you do instead, and what did it cost or save?"] },
+    { id: "EQ5", q: "A DME owner picks up irritated and says you're the fourth vendor to call today. What do you say in the next ten seconds?", probes: ["Why that first?", "What would tell you it's working?"] } ] },
+  { key: "grit", name: "Grit", qs: [
+    { id: "G1", q: "Walk me through your highest-volume day on the phone. How many dials, how many conversations, and how did you feel on call 70?", probes: ["What's your routine for energy across a full day?", "What do you do right after a bad call, before the next dial?"] },
+    { id: "G2", q: "In your last job, what was a normal day of no's? Tell me about a week when the no's piled up.", probes: ["What were your numbers that week: dials, contacts, wins?", "What did you change the next week?"] },
+    { id: "G3", q: "Tell me about a customer or deal that took many attempts before it turned into a yes.", probes: ["How many touches, over how long?", "Why did you keep going when others would have dropped it?"] },
+    { id: "G4", q: "What's the longest you've worked toward a single goal, at work or outside it? Walk me through it from the start.", probes: ["How long, in months or years? Where are you with it now?", "When did you most want to quit, and what kept you going?"] },
+    { id: "G5", q: "Walk me through why you left each of your last two roles.", probes: ["What were you in the middle of when you left?", "What did you finish before you left?"] } ] },
+  { key: "growth", name: "Growth Mindset", qs: [
+    { id: "GM1", q: "Tell me about feedback from a manager that changed how you sell. What did you do the next week?", probes: ["What was your first reaction, honestly?", "What changed in your calls or numbers afterward?"] },
+    { id: "GM2", q: "Tell me about something you were bad at when you started a job and got good at. How long did it take?", probes: ["What did you do, specifically, to get better?", "Who helped you, and how did you find them?"] },
+    { id: "GM3", q: "Tell me about a time you were sure you were right and found out you weren't.", probes: ["What evidence changed your mind?", "What do you check now that you didn't before?"] },
+    { id: "GM4", q: "Rhythm sells oxygen, aerosol therapy, beds, bath safety, mobility aids and more. Tell me how you learned a big product line or system fast before.", probes: ["What was your method?", "How did you know you had it down?"] } ] },
+  { key: "sincerity", name: "Sincerity", qs: [
+    { id: "S1", q: "Tell me about a time a product or order you sold didn't do what the customer expected.", probes: ["How did you find out, and how long until you told them?", "What did it cost you or the company to fix?"] },
+    { id: "S2", q: "Tell me about a time a customer pushed for a date, price or outcome you weren't sure you could deliver. What did you say?", probes: ["Word for word, what did you tell them?", "What happened next?"] },
+    { id: "S3", q: "Tell me about a month you missed your number. Why, and what did you change?", probes: ["What part of that was on you?", "What did you tell your manager, and when?"] },
+    { id: "S4", q: "Tell me about a sale you talked a customer out of, or a deal you walked away from.", probes: ["Why?", "How did your manager react?"] },
+    { id: "S5", q: "Tell me about your best win. Who else helped make it happen?", probes: ["What part was theirs?", "What part was yours?"] } ] },
+  { key: "coach", name: "Coachability", qs: [
+    { id: "RP", roleplay: true, q: "Role play (about 10 minutes). You play an HME provider owner who buys from a competitor; the candidate cold-calls to book a product review. Take 1: 3 minutes. Then ask: \"How do you think that went? One thing you'd keep, one you'd change?\" Give one coaching point as a usable line, for example \"Ask what they're using now before you pitch.\" Then say \"Let's run it again from the top.\" Take 2: 3 minutes. End with \"Let's stop the role play there.\"", probes: [] },
+    { id: "CQ1", q: "Tell me about coaching you got that you disagreed with at first.", probes: ["What did you do with it?", "Were you right or were they?"] },
+    { id: "CQ2", q: "How do you prepare when a manager reviews your call recordings?", probes: ["What did the last review change?", "How fast?"] } ] },
+  { key: "sales", name: "Phone sales skills", qs: [
+    { id: "SK1", q: "Walk me through how you logged and followed up on yesterday's calls in your last job.", probes: ["Which CRM did you use?", "How do you decide who to call back first?"] },
+    { id: "SK2", q: "What were your targets in your last role, what were you measured on, and did you hit them?", probes: ["What was your attainment, as a percent?", "How many dials a day did that take?"] },
+    { id: "SK3", q: "What do you know about Rhythm, and who buys oxygen concentrators wholesale?", probes: ["Who would you ask for at a DME provider?", "What would you want to learn on the first call?"] },
+    { id: "SK4", q: "A prospect says, 'Send me the names of patients you've helped and I'll consider switching.' What do you do?", probes: ["Why?", "What would you offer instead?"] } ] }
 ];
-const FACT_RE = /(\$\s?\d[\d,.]*\s?(k|K|M)?|\b\d+(\.\d+)?\s?%|\b\d[\d,]*\+?\s?(k|K)?\s?(to \d[\d,]*\s?)?(calls?|dials?|accounts?|clients?|customers?|firms?|years?|months?|weeks?|deals?|people|reps?|pounds|lbs|sessions?|meetings?|appointments?|leads?|a day|per day|a week|a month|per month|times)\b|\b#\s?1\b|\bnumber one\b)/gi;
+const DEFAULT_PLAN = ["W1", "W2", "EQ1", "EQ5", "G1", "G2", "GM1", "GM4", "S2", "S3", "RP", "CQ1", "SK1", "SK2", "SK3", "SK4"];
+const QBYID = {}; BANK.forEach(s => s.qs.forEach(q => QBYID[q.id] = { ...q, section: s.key, sectionName: s.name }));
+
+const SKILLS = [
+  { key: "opener", name: "Opener", a: { 1: "\"Did I catch you at a bad time?\" or a pitch with no name, company or reason", 3: "Name and company; reason vague or slow", 5: "Name, company and a specific reason in about 10 seconds, then a permission question" } },
+  { key: "discovery", name: "Discovery", a: { 1: "Pitches before asking two open questions", 3: "Open questions from a list, doesn't build on answers", 5: "Questions that build on what the provider said (current supplier, volume, backorders, reimbursement)" } },
+  { key: "objections", name: "Objections", a: { 1: "Argues, folds, or repeats the pitch louder", 3: "Acknowledges, then pitches again", 5: "Acknowledges, asks about the objection, reframes around the provider's problem" } },
+  { key: "nextstep", name: "Next step", a: { 1: "\"Let's chat sometime\" or no ask", 3: "Asks for a meeting or order with no date", 5: "A specific ask with a day and time, confirmed back" } },
+  { key: "tone", name: "Tone and pace", a: { 1: "Reads a script; rushed or flat", 3: "Conversational in places, stiff under pressure", 5: "Conversational, lets the prospect finish, talks about half the time" } }
+];
+
+// ================= PARSER =================
+const STOP = new Set("the and you your are for that this with what was were have has had from they them their there then than about into when where which who how why can could would should will just like know think really very also been being some any all our out get got one two did does doing done its it's i'm i've i'd you're they're we're let's okay yeah yes well say said tell walk me us him her she his hers too more most much many time times try again before after first next".split(" "));
+const FACT_RE = /(\$\s?\d[\d,.]*\s?(k|K|M)?|\b\d+(\.\d+)?\s?%|\b\d[\d,]*\+?\s?(k|K)?\s?(to \d[\d,]*\s?)?(calls?|dials?|accounts?|clients?|customers?|firms?|years?|months?|weeks?|deals?|people|reps?|pounds|lbs|sessions?|meetings?|appointments?|leads?|conversations?|orders?|a day|per day|a week|a month|per month|times)\b|\b#\s?1\b|\bnumber one\b)/gi;
 const NUM_HL = /(\$\s?\d[\d,.]*\s?(k|K|M)?|\b\d[\d,.]*\+?\s?%?|\b#\s?1\b|\bnumber one\b)/gi;
-const STAR = {
-  S: /\b(when (I|we)|at my|we had|there was|the situation|our team|i was working|back when|my last)\b/i,
-  T: /\b(my goal|i needed to|i had to|we needed|tasked|responsible for|quota|target|the challenge)\b/i,
-  A: /\b(I (built|created|called|asked|set up|started|reached|researched|worked|made|decided|pulled|trained|led|focused|changed|tried|offered|listened|explained|took))\b/i,
-  R: /(\$\s?\d|\d+\s?%|\b(closed|signed|increas\w*|grew|doubled|tripled|result\w*|ended up|went from|dropped|saved|won|ranked|promoted)\b)/i
+const SMALL_TALK = /\b(can you hear|hear me|see me|see my screen|how are you|how's it going|how is your (day|week)|how was your (day|weekend)|are you ready|ready to (get started|start)|sound good|is that okay|is that ok|does that work)\b/i;
+
+const MARK = {
+  event: /\b(last (year|month|week|quarter|summer|spring|fall|winter|january|february|march|april|may|june|july|august|september|october|november|december)|at my (last|previous|old|first) (job|company|role|position)|when I (was|worked|started|first)|one time|there was a time|in (19|20)\d\d|a few (months|years|weeks) ago|yesterday|back (in|when)|my (first|second|third) (week|month|year))\b/i,
+  iAct: /\bI (\w+ed|built|made|took|got|went|told|asked|called|said|ran|led|sold|set|wrote|found|kept|began|chose|spoke|brought|gave|sent|won|met|did|tried|booked|paused|learned)\b/gi,
+  we: /\bwe\b/gi,
+  num: /(\$\s?\d|\b\d+(\.\d+)?\s?%|\b\d[\d,]*\+?\s?(k|K)?\s?(to \d[\d,]*\s?)?(calls?|dials?|accounts?|clients?|customers?|deals?|meetings?|appointments?|conversations?|orders?|units?|deliveries|providers?|firms?|people|reps?|leads?|sales|months?|weeks?|years?|days?|touches|attempts|a day|per day|a week|a month))/i,
+  result: /\b(closed|signed|kept (the|my|that) (account|client|customer)|reorder\w*|renewed|won|lost|hit (my|the|our) (quota|number|goal|target)|increas\w*|grew|doubled|ended up|went from|booked|saved|promoted|retained|turned into)\b/i,
+  lesson: /\b(I learned|learned that|now I|since then|from then on|ever since|these days I|I still)\b/i,
+  admit: /\b(my mistake|I was wrong|I should have|I messed up|my fault|I owned it|I dropped the ball)\b/i,
+  hypo: /\b(I would|I'd|I usually|I always|I typically|I tend to|I generally)\b/gi,
+  blame: /\b(bad leads|leads were (bad|terrible|awful)|didn'?t train (me|us)|they didn'?t train|my manager never|not my fault|management didn'?t|nobody (told|showed) (me|us)|their fault|the company didn'?t|bad territory)\b/i,
+  fixed: /\b(I'?m just not|I'?ve always been|naturally (good|bad)|I'?m a natural|not a (numbers|people|phone|morning) person|that'?s just (my style|how I am|who I am))\b/i,
+  buzz: /\b(very coachable|never give up|people person|hard worker|team player|go-getter|self-starter|I'?m (very |really )?passionate|perfectionist|work too hard)\b/i
 };
+
+const GUARD = [
+  ["Age", /\b(how old|your age|what year did you graduate|when did you graduate|born in|retire\w*|young for|older than)\b/i],
+  ["Family or marital status", /\b(married|husband|wife|spouse|kids|children|pregnan\w*|childcare|daycare|family plans|start a family|maiden name)\b/i],
+  ["Religion", /\b(religio\w*|church|pray|holidays do you (observe|celebrate)|go to temple|mosque)\b/i],
+  ["National origin", /\b(where are you (originally )?from|where were you born|your accent|native language|what country|nationality)\b/i],
+  ["Health or disability", /\b(disabilit\w*|medical condition|medications?|health (problems|issues|conditions)|been sick|workers'? comp|mental health history)\b/i],
+  ["Arrests", /\b(ever been arrested|arrest record)\b/i]
+];
+const NOTE_LINT = /\b(young|old|older|elderly|age|pregnan\w*|married|single mom|husband|wife|kids|children|religio\w*|church|accent|foreign|disab\w*|pretty|attractive|cute|girl|guy|gal|nervous|shy|weird|personality|attitude|lazy|arrogant|cocky|bubbly|sweet)\b/gi;
 
 function toSec(t) {
   if (!t) return null;
@@ -195,18 +389,21 @@ function toSec(t) {
   return p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + p[1];
 }
 function fmt(s) {
-  if (s == null) return "";
+  if (s == null || isNaN(s)) return "";
   s = Math.floor(s);
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
   return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0");
 }
+function words(text) { return (text.match(/\S+/g) || []).length; }
+function sentences(text) { return (text.match(/[^.!?]+[.!?]*/g) || []).map(s => s.trim()).filter(s => s.length > 1); }
+function tokens(text) { return (text.toLowerCase().match(/[a-z']{3,}/g) || []).filter(w => !STOP.has(w)).map(w => w.replace(/'s$/, "").slice(0, 5)); }
 function merge(turns) {
   const out = [];
   for (const t of turns) {
     t.text = t.text.replace(/\s+/g, " ").trim();
     if (!t.text) continue;
     const last = out[out.length - 1];
-    if (last && last.who === t.who) last.text += " " + t.text;
+    if (last && last.who === t.who) { last.text += " " + t.text; if (t.end != null) last.end = t.end; }
     else out.push({ ...t });
   }
   return out;
@@ -217,14 +414,12 @@ function parseVTT(text) {
     const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
     const ti = lines.findIndex(l => /-->/.test(l));
     if (ti < 0) continue;
-    const start = toSec(lines[ti].split("-->")[0].trim());
-    let body = lines.slice(ti + 1).join(" ");
-    let who = "Speaker";
+    const [a, b] = lines[ti].split("-->");
+    let body = lines.slice(ti + 1).join(" "), who = "Speaker";
     const v = body.match(/<v\s+([^>]+)>/i);
     if (v) who = v[1].trim();
     else { const c = body.match(/^([A-Z][^:]{1,40}):\s/); if (c) { who = c[1].trim(); body = body.slice(c[0].length); } }
-    body = body.replace(/<[^>]+>/g, "");
-    turns.push({ who, t: start, text: body });
+    turns.push({ who, t: toSec(a.trim()), end: toSec((b || "").trim().split(/\s/)[0]), text: body.replace(/<[^>]+>/g, "") });
   }
   return merge(turns);
 }
@@ -235,9 +430,8 @@ function parseText(text) {
   const timeOnly = new RegExp("^\\[?" + TIME + "\\]?$");
   const bracket = new RegExp("^\\[?" + TIME + "\\]?\\s*[-|]?\\s*([^:]{2,50}):\\s*(.*)$");
   const colon = /^([A-Z][\w.'\-]*(?: [A-Z][\w.'\-]*){0,3}):\s+(.*)$/;
-  const turns = [];
-  let cur = null;
   const skip = /(started|stopped) transcription|^transcript$|^meeting (title|transcript)/i;
+  const turns = []; let cur = null;
   for (let i = 0; i < lines.length; i++) {
     const l = lines[i];
     if (!l || skip.test(l)) continue;
@@ -245,11 +439,10 @@ function parseText(text) {
     if ((m = l.match(bracket))) { cur = { who: m[2].trim(), t: toSec(m[1]), text: m[3] }; turns.push(cur); continue; }
     if ((m = l.match(headerSame)) && m[1].split(" ").length <= 6 && !/[.?!]$/.test(m[1])) { cur = { who: m[1].trim(), t: toSec(m[2]), text: "" }; turns.push(cur); continue; }
     if ((m = l.match(timeOnly))) {
-      const prev = turns.length && cur && cur.text && cur.text.split(" ").length <= 5 && !/[.?!,]$/.test(cur.text) ? cur : null;
-      if (prev && prev.text === lines[i - 1]) { prev.who = prev.text; prev.text = ""; prev.t = toSec(m[1]); }
-      else if (lines[i - 1] && lines[i - 1].split(" ").length <= 5 && !/[.?!,]$/.test(lines[i - 1])) {
-        if (cur && cur.text.endsWith(lines[i - 1])) cur.text = cur.text.slice(0, -lines[i - 1].length);
-        cur = { who: lines[i - 1], t: toSec(m[1]), text: "" }; turns.push(cur);
+      const prev = lines[i - 1];
+      if (prev && prev.split(" ").length <= 5 && !/[.?!,]$/.test(prev)) {
+        if (cur && cur.text.endsWith(prev)) cur.text = cur.text.slice(0, -prev.length);
+        cur = { who: prev, t: toSec(m[1]), text: "" }; turns.push(cur);
       }
       continue;
     }
@@ -259,76 +452,15 @@ function parseText(text) {
   return merge(turns.filter(t => t.who));
 }
 function parseTranscript(text) {
-  return /-->/.test(text) ? parseVTT(text) : parseText(text);
-}
-function sentences(text) {
-  return (text.match(/[^.!?]+[.!?]*/g) || []).map(s => s.trim()).filter(s => s.length > 1);
-}
-function words(text) { return (text.match(/\S+/g) || []).length; }
-const SMALL_TALK = /\b(can you hear|hear me|see me|see my screen|how are you|how's it going|how is your (day|week)|how was your (day|weekend)|are you ready|ready to (get started|start)|sound good)\b/i;
-function isQuestion(text) {
-  if (SMALL_TALK.test(text) && words(text) < 14) return false;
-  return /\?/.test(text) || /\b(tell me|walk me|describe|talk (to me )?about|give me an example|share (with me|a time)|explain)\b/i.test(text);
-}
-function questionText(text) {
-  const ss = sentences(text);
-  const q = ss.filter(s => /\?$/.test(s) || /\b(tell me|walk me|describe|talk (to me )?about|give me an example|share|explain)\b/i.test(s));
-  return (q.length ? q.slice(-2) : ss.slice(-1)).join(" ");
-}
-function category(q) {
-  for (const [name, re] of CATS) if (re.test(q)) return name;
-  return "General";
-}
-function keyPoints(answer) {
-  const ss = sentences(answer).filter(s => words(s) >= 4);
-  if (!ss.length) return [];
-  const pick = new Set([0]);
-  ss.forEach((s, i) => { FACT_RE.lastIndex = 0; if (FACT_RE.test(s)) pick.add(i); });
-  ss.forEach((s, i) => { if (STAR.R.test(s)) pick.add(i); });
-  return [...pick].sort((a, b) => a - b).slice(0, 4).map(i => ss[i]);
-}
-function analyze(turns, cand, interviewer) {
-  const blocks = [];
-  let cur = { q: null, t: turns.length ? turns[0].t : null, cat: "Opening", answer: "", lines: [] };
-  for (const t of turns) {
-    const isInt = t.who === interviewer;
-    if (isInt && isQuestion(t.text) && words(t.text) >= 2) {
-      if (cur.q || cur.answer) blocks.push(cur);
-      const q = questionText(t.text);
-      cur = { q, t: t.t, cat: category(t.text), answer: "", lines: [t] };
-    } else {
-      cur.lines.push(t);
-      if (t.who === cand) cur.answer += (cur.answer ? " " : "") + t.text;
-    }
-  }
-  if (cur.q || cur.answer) blocks.push(cur);
-  for (const b of blocks) {
-    b.points = keyPoints(b.answer);
-    b.values = VALUES.filter(v => v.re.test(b.answer)).map(v => v.name);
-    b.star = Object.keys(STAR).filter(k => STAR[k].test(b.answer));
-    b.words = words(b.answer);
-  }
-  const facts = [], candQs = [], evidence = {};
-  VALUES.forEach(v => evidence[v.key] = []);
-  for (const t of turns) {
-    if (t.who !== cand) continue;
-    for (const s of sentences(t.text)) {
-      FACT_RE.lastIndex = 0;
-      if (FACT_RE.test(s) && words(s) >= 4) facts.push({ t: t.t, s });
-      if (/\?$/.test(s) && words(s) >= 5 && !/^(you know|right|does that make sense|make sense)/i.test(s)) candQs.push({ t: t.t, s });
-      for (const v of VALUES) if (v.re.test(s) && words(s) >= 6) evidence[v.key].push({ t: t.t, s });
-    }
-  }
-  const wc = {};
-  turns.forEach(t => wc[t.who] = (wc[t.who] || 0) + words(t.text));
-  const total = Object.values(wc).reduce((a, b) => a + b, 0) || 1;
-  const times = turns.map(t => t.t).filter(x => x != null);
-  return {
-    blocks, facts, candQs, evidence,
-    talk: Math.round(100 * (wc[cand] || 0) / total),
-    length: times.length ? Math.max(...times) - Math.min(...times) : null,
-    questions: blocks.filter(b => b.q).length
-  };
+  const turns = /-->/.test(text) ? parseVTT(text) : parseText(text);
+  turns.forEach((t, i) => {
+    let d = null;
+    if (t.end != null && t.t != null) d = t.end - t.t;
+    else if (t.t != null && turns[i + 1] && turns[i + 1].t != null) d = turns[i + 1].t - t.t;
+    if (d == null || d < 0 || d > 1800) d = words(t.text) / 2.6;
+    t.dur = d;
+  });
+  return turns;
 }
 function guessRoles(turns) {
   const wc = {}, qc = {};
@@ -338,105 +470,644 @@ function guessRoles(turns) {
   const cand = people.filter(p => p !== interviewer).sort((a, b) => wc[b] - wc[a])[0] || interviewer;
   return { people, cand, interviewer };
 }
+function isQuestion(text) {
+  const last = questionText(text);
+  if (SMALL_TALK.test(last) && words(last) < 12) return false;
+  return /\?/.test(text) || /\b(tell me|walk me|describe|talk (to me )?about|give me an example|share (with me|a time)|explain)\b/i.test(text);
+}
+function questionText(text) {
+  const ss = sentences(text);
+  const q = ss.filter(s => /\?$/.test(s) || /\b(tell me|walk me|describe|talk (to me )?about|give me an example|share|explain)\b/i.test(s));
+  return (q.length ? q.slice(-2) : ss.slice(-1)).join(" ");
+}
+const PROBE_RE = /^\W*(and |so |okay,? |ok,? |good\.? |great\.? |nice\.? )*(what (happened|did you|was your|were your|part|changed|did that|exactly)|how (many|long|did|fast|much|do you know|did you know)|why( did| was| that| not|\W*$)|who (else|helped)|when did|word for word|pick two|can you put a number|tell me more|what was the (outcome|result))/i;
+function overlap(planText, text) {
+  const p = [...new Set(tokens(planText))]; if (!p.length) return 0;
+  const t = new Set(tokens(text));
+  return p.filter(w => t.has(w)).length / p.length;
+}
+function bestPlan(text, plan) {
+  let best = null, score = 0;
+  for (const id of plan) { const q = QBYID[id]; if (!q || q.roleplay) continue; const s = overlap(q.q, text); if (s > score) { score = s; best = id; } }
+  return score >= 0.3 ? { id: best, score } : null;
+}
+function countMatches(re, text) { re.lastIndex = 0; return (text.match(re) || []).length; }
+function markers(answer) {
+  const ev = MARK.event.test(answer), iAct = countMatches(MARK.iAct, answer), we = countMatches(MARK.we, answer);
+  const hypo = countMatches(MARK.hypo, answer);
+  const m = {
+    good: [], warn: [],
+    event: ev, iAct, we, num: MARK.num.test(answer), result: MARK.result.test(answer), lesson: MARK.lesson.test(answer)
+  };
+  if (ev) m.good.push("real event");
+  if (iAct >= 2) m.good.push("I actions");
+  if (m.num) m.good.push("numbers");
+  if (m.result) m.good.push("result");
+  if (m.lesson) m.good.push("lesson");
+  if (MARK.admit.test(answer)) m.good.push("owns a mistake");
+  if (we >= 3 && we > iAct) m.warn.push("mostly we");
+  if (hypo >= 2 && !ev) m.warn.push("hypothetical");
+  if (MARK.blame.test(answer)) m.warn.push("blames others");
+  if (MARK.fixed.test(answer)) m.warn.push("fixed self-talk");
+  if (MARK.buzz.test(answer) && !ev) m.warn.push("buzzwords, no story");
+  return m;
+}
+function probesFor(b) {
+  const out = [];
+  if (b.words < 12) return out;
+  const m = b.m;
+  if (m.warn.includes("hypothetical")) out.push("Tell me about a time that really happened.");
+  if (m.warn.includes("mostly we")) out.push("What was your part, personally?");
+  else if (m.iAct < 1) out.push("What did you do, specifically?");
+  if (!m.result) out.push("What was the outcome?");
+  if (!m.num && ["grit", "sales"].includes(b.section)) out.push("Can you put a number on that?");
+  if (m.warn.includes("blames others")) out.push("What part of that was on you?");
+  return out.slice(0, 3);
+}
+
+// role play detection on turn indices
+const RP = {
+  start: /\b(role ?play|mock call|let'?s (do|try|run) a (quick )?(practice|mock|call)|pretend (I'?m|you'?re)|I'?ll (be|play) the|you'?re calling me)\b/i,
+  assess: /\b(how do you think (that|it) went|how did (that|it) go|one thing you'?d (keep|change)|what would you change)\b/i,
+  coach: /\b(this time|next time|instead|try (asking|to|it)|ask (them|what|about|before)|before you pitch)\b/i,
+  end: /\b(stop the role ?play|end the role ?play|out of (the )?role ?play|back to the interview|let'?s stop (there|it)|that'?s the end of the role)\b/i,
+  badTime: /\b(bad time|catch you at a bad|is this a good time)\b/i,
+  dated: /\b(monday|tuesday|wednesday|thursday|friday|tomorrow|next week|this week|\d{1,2}(:\d\d)?\s?(am|pm|a\.m\.|p\.m\.)|at \d{1,2}\b|o'?clock)\b/i,
+  defensive: /\b(yeah,? but|that'?s just my style|I disagree|I did (do )?that|I already did)\b/i,
+  open: /\b(so you mean|what would that sound like|let me try|got it|makes sense|good point|okay,? so)\b/i,
+  selfDx: /\b(I (pitched|talked|rushed|should have|didn'?t|forgot|could have|went)|too (early|fast|much|soon))\b/i,
+  generic: /\b(went (well|great|good|fine)|I think it was good|pretty good)\b/i
+};
+function detectRoleplay(turns, cand, interviewer, manual) {
+  const r = { found: false, start: -1, assess: -1, coach: -1, take2: -1, end: turns.length, range: new Set(), take1Turns: [], assessTurns: [], replyTurns: [], take2Turns: [] };
+  const isI = i => turns[i] && turns[i].who === interviewer;
+  if (manual && manual.start >= 0) Object.assign(r, manual, { found: true });
+  else {
+    r.start = turns.findIndex((t, i) => isI(i) && RP.start.test(t.text));
+    if (r.start < 0) return r;
+    r.found = true;
+    for (let i = r.start + 1; i < turns.length; i++) if (isI(i) && RP.assess.test(turns[i].text)) { r.assess = i; break; }
+    const from = r.assess >= 0 ? r.assess + 1 : r.start + 1;
+    for (let i = from; i < turns.length; i++) if (isI(i) && RP.coach.test(turns[i].text) && words(turns[i].text) >= 6) { r.coach = i; break; }
+    if (r.coach >= 0) {
+      let go = -1;
+      for (let i = r.coach + 1; i < turns.length; i++) { if (isI(i) && /\b(again|from the top|one more time|round two|take two|go ahead)\b/i.test(turns[i].text)) { go = i; break; } if (!isI(i) && words(turns[i].text) >= 18) break; }
+      for (let i = (go >= 0 ? go : r.coach) + 1; i < turns.length; i++) if (!isI(i) && (go >= 0 || words(turns[i].text) >= 18)) { r.take2 = i; break; }
+    }
+    for (let i = r.start + 1; i < turns.length; i++) if (isI(i) && RP.end.test(turns[i].text)) { r.end = i; break; }
+    if (r.end === turns.length && r.take2 >= 0) {
+      // fall back: role play ends at the first interviewer turn after take 2 that asks a planned interview question
+      for (let i = r.take2 + 1; i < turns.length; i++) if (isI(i) && /questions for (me|us)/i.test(turns[i].text)) { r.end = i; break; }
+    }
+  }
+  const candIn = (a, b) => { const o = []; for (let i = a; i < b; i++) if (turns[i] && turns[i].who === cand) o.push(i); return o; };
+  const t1End = r.assess >= 0 ? r.assess : (r.coach >= 0 ? r.coach : r.end);
+  r.take1Turns = candIn(r.start + 1, t1End);
+  r.assessTurns = r.assess >= 0 ? candIn(r.assess + 1, r.coach >= 0 ? r.coach : r.end) : [];
+  r.replyTurns = r.coach >= 0 ? candIn(r.coach + 1, r.take2 >= 0 ? r.take2 : r.end) : [];
+  r.take2Turns = r.take2 >= 0 ? candIn(r.take2, r.end) : [];
+  r.range = new Set(); if (r.found) for (let i = r.start; i < r.end; i++) r.range.add(i);
+  return r;
+}
+function coachLine(turns, rp) {
+  if (rp.coach < 0) return "";
+  const ss = sentences(turns[rp.coach].text).filter(s => RP.coach.test(s));
+  return (ss.length ? ss.join(" ") : turns[rp.coach].text).trim();
+}
+function rpEval(turns, rp, line) {
+  const txt = ix => ix.map(i => turns[i].text).join(" ");
+  const t1 = txt(rp.take1Turns), t2 = txt(rp.take2Turns), as = txt(rp.assessTurns), rep = txt(rp.replyTurns);
+  const cw = [...new Set(tokens(line))];
+  const t2set = new Set(tokens(t2)), t1set = new Set(tokens(t1));
+  const hit = cw.filter(w => t2set.has(w));
+  const newHit = hit.filter(w => !t1set.has(w));
+  const firstCand = ix => ix.length ? turns[ix[0]].text : "";
+  const lastCand = ix => ix.length ? turns[ix[ix.length - 1]].text : "";
+  const words2 = ix => ix.reduce((a, i) => a + words(turns[i].text), 0);
+  const range = (a, b) => { let c = 0, all = 0; for (let i = a; i < b; i++) { if (!turns[i]) continue; const w = words(turns[i].text); all += w; if (rp.take1Turns.includes(i) || rp.take2Turns.includes(i)) c += w; } return all ? Math.round(100 * c / all) : 0; };
+  return {
+    coachWords: cw, hit, newHit,
+    q1: (t1.match(/\?/g) || []).length, q2: (t2.match(/\?/g) || []).length,
+    selfDx: RP.selfDx.test(as) ? "specific" : RP.generic.test(as) ? "generic" : as ? "unclear" : "none",
+    open: RP.open.test(rep), defensive: RP.defensive.test(rep + " " + as),
+    bad1: RP.badTime.test(firstCand(rp.take1Turns)), bad2: RP.badTime.test(firstCand(rp.take2Turns)),
+    dated1: RP.dated.test(lastCand(rp.take1Turns)), dated2: RP.dated.test(lastCand(rp.take2Turns)),
+    talk1: rp.take1Turns.length ? range(rp.start + 1, rp.assess >= 0 ? rp.assess : rp.coach >= 0 ? rp.coach : rp.end) : 0,
+    talk2: rp.take2Turns.length ? range(rp.take2, rp.end) : 0,
+    w1: words2(rp.take1Turns), w2: words2(rp.take2Turns)
+  };
+}
+function extractMetrics(text) {
+  const n = s => s ? Number(String(s).replace(/,/g, "")) : null;
+  const g = (re) => { const m = text.match(re); return m; };
+  let m, out = { dials: null, convos: null, meetings: null, meetingsPer: null, attain: null, quota: null };
+  if ((m = g(/(\d[\d,]*)\s*(?:to|-|or)?\s*(\d[\d,]*)?\s*(?:dials|calls|outbound calls)\s*(?:a|per|each)\s*day/i))) out.dials = n(m[2]) || n(m[1]);
+  else if ((m = g(/(\d[\d,]*)\s*(?:dials|calls)\b/i))) out.dials = n(m[1]);
+  // conversations only count when stated per day, or in the same sentence as the dials figure used above
+  const CONV = /(\d[\d,]*)\s*(?:to \d[\d,]*\s*)?(?:conversations|connects|contacts|live conversations)/i;
+  if ((m = g(/(\d[\d,]*)\s*(?:to \d[\d,]*\s*)?(?:conversations|connects|contacts|live conversations)\s*(?:a|per|each)\s*day/i))) out.convos = n(m[1]);
+  else if (out.dials) { const s = sentences(text).find(x => CONV.test(x) && new RegExp("\\b" + out.dials + "\\b").test(x.replace(/,/g, ""))); if (s) out.convos = n(s.match(CONV)[1]); }
+  if (!out.convos && !out.dials) { const s = sentences(text).find(x => CONV.test(x) && /(\d[\d,]*)\s*(?:dials|calls)/i.test(x)); if (s) { out.dials = n(s.match(/(\d[\d,]*)\s*(?:dials|calls)/i)[1]); out.convos = n(s.match(CONV)[1]); } }
+  if ((m = g(/(\d[\d,]*)\s*(?:meetings|appointments|demos|orders)\s*(?:a|per|each)\s*(day|week|month)/i))) { out.meetings = n(m[1]); out.meetingsPer = m[2].toLowerCase(); }
+  if ((m = g(/(\d{2,3})\s*%\s*(?:of|to)?\s*(?:my |the |our )?(?:quota|goal|target|plan|number)/i))) out.attain = n(m[1]);
+  if ((m = g(/quota (?:of|was|is)\s*(\$?\s?[\d,.]+\s?k?)/i))) out.quota = m[1].trim();
+  return out;
+}
+function analyze(it, plan) {
+  const turns = parseTranscript(it.raw);
+  const cand = it.cand, interviewer = it.interviewer;
+  const rp = detectRoleplay(turns, cand, interviewer, it.rpManual);
+  const blocks = [];
+  const S = []; // all candidate sentences
+  let cur = null;
+  turns.forEach((t, i) => {
+    if (rp.range.has(i)) return;
+    const isInt = t.who === interviewer;
+    if (isInt && isQuestion(t.text) && words(t.text) >= 2) {
+      const q = questionText(t.text);
+      const pm = bestPlan(q, plan);
+      const probe = cur && cur.q && !pm && PROBE_RE.test(q) && words(q) <= 16;
+      if (probe) { cur.probes.push({ q, t: t.t }); cur.lines.push(i); return; }
+      cur = { q, t: t.t, plan: pm ? pm.id : null, probes: [], lines: [i], ans: [] };
+      blocks.push(cur);
+      return;
+    }
+    if (!cur) { cur = { q: null, t: t.t, plan: null, probes: [], lines: [], ans: [] }; blocks.push(cur); }
+    cur.lines.push(i);
+    if (t.who === cand) cur.ans.push(i);
+  });
+  for (const b of blocks) {
+    b.answer = b.ans.map(i => turns[i].text).join(" ");
+    b.words = words(b.answer);
+    b.section = b.plan ? QBYID[b.plan].section : guessSection(b.q || "");
+    b.m = markers(b.answer);
+    b.prompts = b.q ? probesFor(b) : [];
+    if (b.plan) {
+      const pq = QBYID[b.plan];
+      b.plannedProbes = pq.probes.map(p => ({ p, asked: b.probes.some(x => overlap(p, x.q) >= 0.4) }));
+    } else b.plannedProbes = [];
+    b.sents = [];
+    for (const i of b.ans) for (const s of sentences(turns[i].text)) { const k = S.length; S.push({ t: turns[i].t, s, block: blocks.indexOf(b) }); b.sents.push(k); }
+  }
+  // role play sentences also selectable
+  const rpS = { take1: [], take2: [], assess: [], reply: [] };
+  if (rp.found) for (const [k, ix] of [["take1", rp.take1Turns], ["assess", rp.assessTurns], ["reply", rp.replyTurns], ["take2", rp.take2Turns]])
+    for (const i of ix) for (const s of sentences(turns[i].text)) { rpS[k].push(S.length); S.push({ t: turns[i].t, s, block: -1 }); }
+  // coverage
+  const coverage = plan.filter(id => QBYID[id] && QBYID[id].section !== "warm").map(id => {
+    const q = QBYID[id];
+    if (q.roleplay) return { id, status: rp.found ? (rp.take2 >= 0 ? "asked" : "partly") : "missed", t: rp.found ? turns[rp.start].t : null };
+    let best = 0, t = null;
+    for (const b of blocks) { const texts = [b.q || ""].concat(b.probes.map(p => p.q)); for (const x of texts) { const s = overlap(q.q, x); if (s > best) { best = s; t = b.t; } } }
+    return { id, status: best >= 0.45 ? "asked" : best >= 0.25 ? "partly" : "missed", t };
+  });
+  // talk time by seconds
+  const sec = {}; turns.forEach(t => sec[t.who] = (sec[t.who] || 0) + t.dur);
+  const total = Object.values(sec).reduce((a, b) => a + b, 0) || 1;
+  const longest = turns.filter(t => t.who === cand).reduce((a, t) => Math.max(a, t.dur), 0);
+  const times = turns.map(t => t.t).filter(x => x != null);
+  // guardrails
+  const guard = [];
+  turns.forEach((t, i) => { if (t.who !== interviewer) return; for (const [label, re] of GUARD) { const m = t.text.match(re); if (m) guard.push({ i, t: t.t, label, text: t.text, hit: m[0] }); } });
+  const candText = turns.filter(t => t.who === cand).map(t => t.text).join(" ");
+  const facts = S.filter(x => { FACT_RE.lastIndex = 0; return FACT_RE.test(x.s) && words(x.s) >= 4; });
+  const candQs = S.filter(x => x.block !== -1 && /\?$/.test(x.s) && words(x.s) >= 5 && !/^(you know|right|does that make sense|make sense)/i.test(x.s));
+  return {
+    turns, rp, blocks, S, rpS, coverage, guard, facts, candQs,
+    metrics: extractMetrics(candText),
+    talk: Math.round(100 * (sec[cand] || 0) / total), longest,
+    length: times.length ? Math.max(...times) - Math.min(...times) + (turns[turns.length - 1].dur || 0) : null,
+    questions: blocks.filter(b => b.q).length
+  };
+}
+function guessSection(q) {
+  if (/about yourself|drew you|walk me through your (background|resume)|questions for (me|us)|anything else/i.test(q)) return "warm";
+  if (/dials|calls|quota|crm|target|attainment|prospect|patients|wholesale|know about rhythm/i.test(q)) return "sales";
+  if (/feedback|coach|learn|bad at/i.test(q)) return "growth";
+  if (/mistake|missed|wrong|promise|honest|walked away/i.test(q)) return "sincerity";
+  if (/no'?s|rejection|longest|attempts|quit/i.test(q)) return "grit";
+  if (/upset|unhappy|frustrat|bad news|irritated|feel/i.test(q)) return "eq";
+  return "other";
+}
 // PARSER END
 
+// ================= STORE =================
+const KEY = "interview-notes-v2";
+let DB = { v: 2, plan: DEFAULT_PLAN.slice(), interviews: {} };
+let canStore = true;
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s && s.v === 2) DB = { ...DB, ...s };
+    const old = JSON.parse(localStorage.getItem("interview-notes-v1") || "null");
+    if (old && old.raw && !DB.migrated) {
+      const it = newInterview(old.raw); Object.assign(it, { cand: old.cand, interviewer: old.interviewer, role: old.role || "", date: old.date || it.date, notes: old.notes || "" });
+      DB.interviews[it.id] = it; DB.migrated = true; save();
+    }
+  } catch (e) { canStore = false; }
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(DB)); canStore = true; }
+  catch (e) { canStore = false; }
+  $("storeWarn").classList.toggle("hidden", canStore);
+}
+function newInterview(raw) {
+  const id = "i" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  return { id, raw, cand: "", interviewer: "", role: "Business Development Specialist", date: new Date().toISOString().slice(0, 10),
+    ratings: {}, evidence: {}, skills: {}, flags: {}, rec: "", rationale: "", notes: "", decidedAt: null, hold: false, log: [],
+    coachText: null, rpManual: null, metricsEdit: {}, followDone: {}, created: new Date().toISOString(), updated: new Date().toISOString() };
+}
+function keepUntil(it) {
+  if (it.hold) return "Legal hold";
+  if (!it.decidedAt) return "Set after decision";
+  const d = new Date(it.decidedAt); d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+}
+function avg(it) { const v = VKEYS.map(k => it.ratings[k]).filter(Boolean); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; }
+
+// ================= UI HELPERS =================
 const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const hl = s => esc(s).replace(NUM_HL, m => /\d|#|number/.test(m) ? "<mark>" + m + "</mark>" : m);
-const KEY = "interview-notes-v1";
-let state = { raw: "", cand: "", interviewer: "", role: "", date: "", ratings: {}, overall: 0, rec: "", notes: "", valueNotes: {} };
-let turns = [], result = null;
+function toast(t) { const el = $("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove("show"), 1700); }
+const REC = [["sp", "Strong pass"], ["p", "Pass"], ["a", "Advance"], ["sa", "Strong advance"]];
+const recName = k => (REC.find(r => r[0] === k) || [0, ""])[1];
+let view = "library", cur = null, A = null;
+function show(v) {
+  view = v;
+  ["library", "new", "guide", "compare", "interview"].forEach(x => $("v-" + x).classList.toggle("hidden", x !== v));
+  document.querySelectorAll("nav button[data-view]").forEach(b => b.classList.toggle("on", b.dataset.view === v));
+  if (v === "library") renderLibrary();
+  if (v === "guide") renderGuide();
+  if (v === "compare") renderCompare();
+  window.scrollTo(0, 0);
+}
+function touch(what, from, to) {
+  cur.updated = new Date().toISOString();
+  if (what && cur.decidedAt && from !== to) cur.log.push({ at: new Date().toISOString(), what, from: from == null ? "" : from, to: to == null ? "" : to });
+  DB.interviews[cur.id] = cur; save();
+}
 
-function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
-function toast(t) { const el = $("toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1600); }
-
-function run(fresh) {
-  turns = parseTranscript(state.raw);
-  if (turns.length < 2) { $("msg").textContent = "Couldn't find speakers in that text. Paste the full Teams transcript with names and times."; return; }
-  const g = guessRoles(turns);
-  if (fresh || !g.people.includes(state.cand)) state.cand = g.cand;
-  if (fresh || !g.people.includes(state.interviewer)) state.interviewer = g.interviewer;
-  if (!state.date) state.date = new Date().toISOString().slice(0, 10);
-  for (const [id, key] of [["candSel", "cand"], ["intSel", "interviewer"]]) {
-    $(id).innerHTML = g.people.map(p => `<option ${p === state[key] ? "selected" : ""}>${esc(p)}</option>`).join("");
+// ================= LIBRARY =================
+function renderLibrary() {
+  const list = Object.values(DB.interviews).sort((a, b) => (b.date || "").localeCompare(a.date || "") || b.created.localeCompare(a.created));
+  if (!list.length) { $("libTable").innerHTML = `<p class="muted">No interviews yet. Click <b>New interview</b> to add a Teams transcript, or open the <b>Interview guide</b> to plan your questions.</p>`; $("patternNote").innerHTML = ""; return; }
+  const today = new Date().toISOString().slice(0, 10);
+  $("libTable").innerHTML = `<table><tr><th>Candidate</th><th>Role</th><th>Date</th><th>Decision</th><th>Avg score</th><th>Keep until</th><th></th></tr>` +
+    list.map(it => {
+      const k = keepUntil(it), past = /^\d/.test(k) && k < today;
+      const a = avg(it);
+      return `<tr class="click" data-open="${it.id}"><td><b>${esc(it.cand || "Unnamed")}</b></td><td>${esc(it.role)}</td><td>${esc(it.date)}</td>
+        <td>${it.rec ? `<span class="pill ${it.rec}">${recName(it.rec)}</span>` : `<span class="muted small">Not decided</span>`}</td>
+        <td>${a ? a.toFixed(1) : "<span class='muted small'>n/a</span>"}</td>
+        <td class="small">${esc(k)}${past ? ` <span class="pill">past</span>` : ""}</td>
+        <td class="no-print">${it.hold ? `<span class="small muted">Held</span>` : `<button class="link danger" data-del="${it.id}">Delete</button>`}</td></tr>`;
+    }).join("") + `</table>`;
+  $("patternNote").innerHTML = patternNote(null);
+}
+function patternNote(curId) {
+  const done = Object.values(DB.interviews).filter(it => VKEYS.filter(k => it.ratings[k]).length >= 4);
+  if (done.length < 5) return "";
+  const all = done.flatMap(it => VKEYS.map(k => it.ratings[k]).filter(Boolean));
+  const counts = {}; all.forEach(v => counts[v] = (counts[v] || 0) + 1);
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const notes = [];
+  if (top && top[1] / all.length > 0.55) notes.push(`${Math.round(100 * top[1] / all.length)}% of your scores are ${top[0]}. Read the anchors again; scores that bunch on one number make candidates hard to tell apart.`);
+  if (curId) {
+    const me = DB.interviews[curId], mine = avg(me);
+    const others = done.filter(it => it.id !== curId).map(avg).filter(Boolean);
+    if (mine && others.length >= 4) {
+      const base = others.reduce((a, b) => a + b, 0) / others.length;
+      if (Math.abs(mine - base) >= 0.8) notes.push(`This candidate averages ${mine.toFixed(1)} against your usual ${base.toFixed(1)}. Check each score has a quote behind it.`);
+    }
   }
-  $("role").value = state.role; $("date").value = state.date;
-  $("rec").value = state.rec; $("myNotes").value = state.notes;
-  render();
-  $("inputCard").classList.add("hidden"); $("out").classList.remove("hidden"); $("newBtn").classList.remove("hidden");
-  save();
+  return notes.length ? `<div class="banner warn">${notes.map(esc).join("<br>")}</div>` : "";
+}
+$("libTable").onclick = e => {
+  const d = e.target.closest("[data-del]");
+  if (d) {
+    e.stopPropagation();
+    if (!d.dataset.armed) { d.dataset.armed = 1; d.textContent = "Click again to delete"; setTimeout(() => { if (d.isConnected) { delete d.dataset.armed; d.textContent = "Delete"; } }, 3000); return; }
+    delete DB.interviews[d.dataset.del]; save(); renderLibrary(); toast("Deleted"); return;
+  }
+  const r = e.target.closest("[data-open]"); if (r) openInterview(r.dataset.open);
+};
+$("csvBtn").onclick = () => {
+  const head = ["Candidate", "Role", "Date", "Interviewer"].concat(VALUES.map(v => v.name), ["Average", "Decision", "Rationale", "Keep until", "Legal hold"]);
+  const rows = Object.values(DB.interviews).map(it => [it.cand, it.role, it.date, it.interviewer].concat(VKEYS.map(k => it.ratings[k] || ""), [avg(it) ? avg(it).toFixed(1) : "", recName(it.rec), it.rationale, keepUntil(it), it.hold ? "yes" : "no"]));
+  const csv = [head].concat(rows).map(r => r.map(x => `"${String(x == null ? "" : x).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+  download("Interview scores " + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
+};
+function download(name, text, type) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type || "text/plain" })); a.download = name; a.click();
 }
 
-function render() {
-  result = analyze(turns, state.cand, state.interviewer);
-  const r = result;
-  $("stats").innerHTML = [
-    [r.length != null ? fmt(r.length) : "n/a", "Length"],
-    [r.questions, "Questions asked"],
-    [r.talk + "%", "Candidate talk time"],
-    [r.facts.length, "Facts and numbers"]
-  ].map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+// ================= GUIDE =================
+function renderGuide() {
+  const plan = new Set(DB.plan);
+  $("guideBody").innerHTML = BANK.map(sec => {
+    const v = VALUES.find(x => x.key === sec.key);
+    return `<div style="margin-top:16px"><h3>${esc(sec.name)}</h3>
+      ${v ? `<details class="no-print"><summary>Score anchors</summary><div class="anchors">${[1, 3, 5].map(n => `<div><b>${n}:</b> ${esc(v.anchors[n])}</div>`).join("")}</div></details>` : ""}
+      ${sec.qs.map(q => `<div class="guide-q"><input type="checkbox" data-plan="${q.id}" ${plan.has(q.id) ? "checked" : ""} class="no-print">
+        <div><span class="chip cat">${q.id}</span> ${esc(q.q)}${q.probes.length ? `<div class="small muted">Probes: ${q.probes.map(esc).join(" &nbsp;|&nbsp; ")}</div>` : ""}</div></div>`).join("")}</div>`;
+  }).join("") + `<div style="margin-top:16px"><h3>Mock call skills (scored in the role play)</h3>${SKILLS.map(s => `<div class="small" style="margin-bottom:4px"><b>${s.name}.</b> 1: ${esc(s.a[1])}. 3: ${esc(s.a[3])}. 5: ${esc(s.a[5])}.</div>`).join("")}</div>`;
+}
+$("guideBody").onchange = e => {
+  const id = e.target.dataset.plan; if (!id) return;
+  const set = new Set(DB.plan);
+  e.target.checked ? set.add(id) : set.delete(id);
+  DB.plan = Object.keys(QBYID).filter(k => set.has(k)); save();
+};
+$("guideReset").onclick = () => { DB.plan = DEFAULT_PLAN.slice(); save(); renderGuide(); toast("Default plan restored"); };
+$("guidePrint").onclick = () => { try { window.print(); } catch (e) {} };
 
-  $("qaList").innerHTML = r.blocks.map((b, i) => {
-    const head = b.q ? `<span class="q">${esc(b.q)}</span>` : `<span class="q muted">Opening conversation</span>`;
-    const tags = `<span class="tag cat">${b.cat}</span>` + b.values.map(v => `<span class="tag">${v}</span>`).join("") +
-      (b.star.length >= 3 ? `<span class="tag star" title="Situation, Task, Action, Result">STAR: ${b.star.join(" ")}</span>` : "");
-    const pts = b.points.length ? `<ul class="points">${b.points.map(p => `<li>${hl(p)}</li>`).join("")}</ul>` : `<ul class="points"><li class="muted">No answer captured from ${esc(state.cand)}.</li></ul>`;
-    const full = b.lines.map(l => `<div><span class="time">${fmt(l.t)}</span> <span class="who">${esc(l.who)}:</span> ${hl(l.text)}</div>`).join("");
-    return `<div class="qa"><div class="qhead"><span class="time">${fmt(b.t)}</span>${head}</div>
-      <div style="margin-left:50px">${tags}</div>${pts}
-      <details><summary>Full answer (${b.words} words)</summary><div class="full">${full}</div></details></div>`;
-  }).join("");
+// ================= COMPARE =================
+function renderCompare() {
+  const list = Object.values(DB.interviews);
+  const roles = [...new Set(list.map(it => it.role || ""))];
+  const sel = $("cmpRole"), keep = sel.value;
+  sel.innerHTML = `<option value="*">All roles</option>` + roles.map(r => `<option ${r === keep ? "selected" : ""}>${esc(r)}</option>`).join("");
+  const rows = list.filter(it => sel.value === "*" || !sel.value || it.role === sel.value).sort((a, b) => (avg(b) || 0) - (avg(a) || 0));
+  if (!rows.length) { $("cmpTable").innerHTML = `<p class="muted">No interviews to compare yet.</p>`; return; }
+  $("cmpTable").innerHTML = `<div style="overflow:auto"><table><tr><th>Candidate</th>${VALUES.map(v => `<th>${esc(v.name)}</th>`).join("")}<th>Avg</th><th>Decision</th><th>Rationale</th></tr>` +
+    rows.map(it => `<tr class="click" data-open="${it.id}"><td><b>${esc(it.cand)}</b><div class="tiny muted">${esc(it.date)}</div></td>${VKEYS.map(k => `<td>${it.ratings[k] || "<span class='muted'>-</span>"}</td>`).join("")}
+      <td><b>${avg(it) ? avg(it).toFixed(1) : "-"}</b></td><td>${it.rec ? `<span class="pill ${it.rec}">${recName(it.rec)}</span>` : ""}</td><td class="small">${esc(it.rationale)}</td></tr>`).join("") + `</table></div>`;
+}
+$("cmpRole").onchange = renderCompare;
+$("cmpTable").onclick = e => { const r = e.target.closest("[data-open]"); if (r) openInterview(r.dataset.open); };
 
-  $("facts").innerHTML = r.facts.length ? r.facts.map(f => `<li><span class="time">${fmt(f.t)}</span> ${hl(f.s)}</li>`).join("") : `<li class="muted">No numbers found.</li>`;
+// ================= INTERVIEW =================
+function openInterview(id, fresh) {
+  cur = DB.interviews[id];
+  const turns = parseTranscript(cur.raw);
+  if (turns.length < 2) { toast("Couldn't find speakers in that transcript"); return; }
+  const g = guessRoles(turns);
+  if (fresh || !g.people.includes(cur.cand)) cur.cand = g.cand;
+  if (fresh || !g.people.includes(cur.interviewer)) cur.interviewer = g.interviewer;
+  for (const [sid, key] of [["candSel", "cand"], ["intSel", "interviewer"]])
+    $(sid).innerHTML = g.people.map(p => `<option ${p === cur[key] ? "selected" : ""}>${esc(p)}</option>`).join("");
+  $("role").value = cur.role || ""; $("date").value = cur.date || "";
+  $("myNotes").value = cur.notes || ""; $("holdChk").checked = !!cur.hold;
+  save(); show("interview"); renderInterview();
+}
+function renderInterview() {
+  A = analyze(cur, DB.plan);
+  const r = A;
+  $("stats").innerHTML = [[r.length != null ? fmt(r.length) : "n/a", "Length"], [r.questions, "Questions asked"], [r.talk + "%", "Candidate talk time"], [fmt(r.longest), "Longest answer"], [r.facts.length, "Facts and numbers"]]
+    .map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+  $("guardBox").innerHTML = r.guard.length ? `<div class="banner bad"><b>Review these exchanges.</b> These interviewer lines touch topics that federal or Florida law protects. They may be innocent; check the context and keep them out of your scoring.<ul style="margin:6px 0 0;padding-left:18px">${r.guard.map(g => `<li>${fmt(g.t)} <b>${esc(g.label)}</b>: "${esc(g.text.length > 160 ? g.text.slice(0, 157) + "..." : g.text)}"</li>`).join("")}</ul></div>` : "";
+  renderQA(); renderRP(); renderMetrics(); renderCoverage(); renderFollowups(); renderValues(); renderDecision(); lintNotes();
   $("candQs").innerHTML = r.candQs.length ? r.candQs.map(f => `<li><span class="time">${fmt(f.t)}</span> ${esc(f.s)}</li>`).join("") : `<li class="muted">None captured.</li>`;
-
-  $("values").innerHTML = VALUES.map(v => {
-    const ev = r.evidence[v.key].slice(0, 3);
-    const n = state.ratings[v.key] || 0;
-    return `<div class="value"><h3>${v.name}</h3>
-      <div class="rate" data-key="${v.key}">${[1, 2, 3, 4, 5].map(k => `<button class="${k === n ? "on" : ""}" data-v="${k}">${k}</button>`).join("")}</div>
-      <div class="evidence">${ev.length ? ev.map(e => `<div>${fmt(e.t)} "${esc(e.s.length > 150 ? e.s.slice(0, 147) + "..." : e.s)}"</div>`).join("") : "No direct examples found in the transcript."}</div>
-      <input data-note="${v.key}" placeholder="Note" value="${esc(state.valueNotes[v.key] || "")}"></div>`;
-  }).join("");
-  $("overall").innerHTML = [1, 2, 3, 4, 5].map(k => `<button class="${k === state.overall ? "on" : ""}" data-v="${k}">${k}</button>`).join("");
+  $("patternMine").innerHTML = patternNote(cur.id);
+  $("keepUntil").textContent = "Keep until: " + keepUntil(cur);
+}
+function sentHtml(k) {
+  const x = A.S[k]; const picked = VKEYS.some(v => (cur.evidence[v] || []).some(e => e.s === x.s && e.t === x.t));
+  return `<span class="sent${picked ? " picked" : ""}" data-s="${k}">${hl(x.s)}</span>`;
+}
+function renderQA() {
+  const T = A.turns;
+  $("qaList").innerHTML = A.blocks.map((b, bi) => {
+    const plan = b.plan ? `<span class="chip plan">${b.plan}</span>` : "";
+    const head = b.q ? `<span class="q">${esc(b.q)}</span>` : `<span class="q muted">Opening conversation</span>`;
+    const chips = b.m.good.map(c => `<span class="chip good">${c}</span>`).join("") + b.m.warn.map(c => `<span class="chip warn">${c}</span>`).join("");
+    const keyIdx = pickKey(b);
+    const pts = b.sents.length ? `<ul class="points">${keyIdx.map(k => `<li>${sentHtml(k)}</li>`).join("")}</ul>` : `<ul class="points"><li class="muted">No answer captured.</li></ul>`;
+    const probes = b.probes.map(p => `<div class="probe"><span class="time">${fmt(p.t)}</span> Probe: ${esc(p.q)}</div>`).join("");
+    const pp = b.plannedProbes.filter(p => !p.asked).map(p => p.p);
+    const prompts = b.q && b.section !== "warm" ? [...new Set(b.prompts.concat(pp.length && b.m.warn.length ? pp.slice(0, 1) : []))] : [];
+    const full = b.lines.map(i => `<div><span class="time">${fmt(T[i].t)}</span> <span class="who">${esc(T[i].who)}:</span> ${T[i].who === cur.cand ? sentences(T[i].text).map(s => { const k = A.S.findIndex(x => x.s === s && x.t === T[i].t); return k >= 0 ? sentHtml(k) : esc(s); }).join(" ") : esc(T[i].text)}</div>`).join("");
+    return `<div class="qa"><div class="qhead"><span class="time">${fmt(b.t)}</span>${plan}${head}</div>${probes}
+      <div class="indent">${chips}</div>${pts}
+      ${prompts.length ? `<div class="prompt">Probe next time: ${prompts.map(esc).join(" &nbsp;|&nbsp; ")}</div>` : ""}
+      <details class="indent"><summary>Full answer (${b.words} words)</summary><div class="full">${full}</div></details></div>`;
+  }).join("") || `<p class="muted">No questions found.</p>`;
+}
+function pickKey(b) {
+  const ss = b.sents.filter(k => words(A.S[k].s) >= 4);
+  if (!ss.length) return [];
+  const pick = new Set([ss[0]]);
+  ss.forEach(k => { const s = A.S[k].s; FACT_RE.lastIndex = 0; if (FACT_RE.test(s) || MARK.result.test(s) || MARK.lesson.test(s) || MARK.blame.test(s) || MARK.fixed.test(s)) pick.add(k); });
+  return [...pick].sort((a, b) => a - b).slice(0, 5);
 }
 
-function notesText() {
-  const r = result, L = [];
-  L.push("INTERVIEW NOTES");
-  L.push(`Candidate: ${state.cand}`);
-  L.push(`Interviewer: ${state.interviewer}`);
-  if (state.role) L.push(`Role: ${state.role}`);
-  L.push(`Date: ${state.date}`);
-  L.push(`Length: ${r.length != null ? fmt(r.length) : "n/a"} | Candidate talk time: ${r.talk}%`);
+function renderRP() {
+  const rp = A.rp, T = A.turns;
+  const opts = (sel, who) => `<option value="-1">Not set</option>` + T.map((t, i) => (!who || t.who === who) ? `<option value="${i}" ${i === sel ? "selected" : ""}>${fmt(t.t)} ${esc(t.who.split(" ")[0])}: ${esc(t.text.slice(0, 60))}</option>` : "").join("");
+  const manual = `<details ${rp.found ? "" : "open"}><summary>${rp.found ? "Adjust where the role play starts and ends" : "No role play found. If you ran one, mark it here"}</summary>
+    <div class="twocol" style="margin-top:8px">
+      <div><label class="f">Role play starts (your setup line)</label><select data-rp="start">${opts(rp.start, cur.interviewer)}</select></div>
+      <div><label class="f">You ask how it went</label><select data-rp="assess">${opts(rp.assess, cur.interviewer)}</select></div>
+      <div><label class="f">Your coaching line</label><select data-rp="coach">${opts(rp.coach, cur.interviewer)}</select></div>
+      <div><label class="f">Take 2 starts (candidate)</label><select data-rp="take2">${opts(rp.take2, cur.cand)}</select></div>
+      <div><label class="f">Role play ends (first line after it)</label><select data-rp="end">${opts(rp.end === T.length ? -1 : rp.end, null)}</select></div>
+      <div style="align-self:end"><button class="link" id="rpClear">Go back to automatic detection</button></div>
+    </div></details>`;
+  if (!rp.found) { $("rpBody").innerHTML = `<p class="small muted">The role play redo is the strongest test of coachability for this seat: take 1, ask how it went, give one coaching line, take 2. The guide (question RP) has a script.</p>` + manual; return; }
+  const line = cur.coachText != null ? cur.coachText : coachLine(T, rp);
+  const e = rpEval(T, rp, line);
+  const yes = (b, good) => b ? `<span class="${good ? "ok" : "miss"}">yes</span>` : `<span class="${good ? "miss" : "ok"}">no</span>`;
+  const pct = e.coachWords.length ? e.hit.length / e.coachWords.length : 0;
+  const impl = !rp.take2Turns.length ? `<span class="miss">No take 2 found</span>` : pct >= 0.6 ? `<span class="ok">Clearly used</span>` : pct >= 0.3 ? `<span class="part">Partly used</span>` : `<span class="miss">Not used</span>`;
+  const sentsOf = k => A.rpS[k].map(sentHtml).join(" ") || `<span class="muted">None found</span>`;
+  $("rpBody").innerHTML = `
+    <div class="small"><span class="time">${fmt(T[rp.start].t)}</span> Role play found.</div>
+    <label class="f" style="margin-top:8px">Coaching line you gave (edit if needed)</label>
+    <input id="coachIn" value="${esc(line)}">
+    <table style="margin-top:10px">
+      <tr><th>Check</th><th>Take 1</th><th>Take 2</th></tr>
+      <tr><td>Opened with "bad time?"</td><td>${yes(e.bad1, false)}</td><td>${yes(e.bad2, false)}</td></tr>
+      <tr><td>Questions asked</td><td>${e.q1}</td><td>${e.q2}</td></tr>
+      <tr><td>Ended with a dated next step</td><td>${yes(e.dated1, true)}</td><td>${yes(e.dated2, true)}</td></tr>
+      <tr><td>Candidate talk share (cold call benchmark about 55%)</td><td>${e.talk1}%</td><td>${e.talk2}%</td></tr>
+    </table>
+    <div style="margin-top:10px" class="small">
+      <div><b>Coached behavior in take 2:</b> ${impl}${e.coachWords.length ? ` <span class="muted">(${e.hit.length} of ${e.coachWords.length} key words: ${e.coachWords.map(w => e.hit.includes(w) ? `<b>${esc(w)}</b>` : esc(w)).join(", ")})</span>` : ""}</div>
+      <div><b>Self-assessment after take 1:</b> ${e.selfDx === "specific" ? `<span class="ok">Specific</span>` : e.selfDx === "generic" ? `<span class="miss">Generic ("went well")</span>` : `<span class="muted">${e.selfDx === "none" ? "Not found" : "Unclear"}</span>`}</div>
+      <div><b>Response to coaching:</b> ${e.defensive ? `<span class="miss">Sounds defensive</span>` : e.open ? `<span class="ok">Open (clarified or agreed)</span>` : `<span class="muted">Neutral</span>`}</div>
+    </div>
+    <details style="margin-top:8px"><summary>What the candidate said in each part</summary><div class="full">
+      <div><b>Take 1:</b> ${sentsOf("take1")}</div><div><b>Self-assessment:</b> ${sentsOf("assess")}</div><div><b>Reply to coaching:</b> ${sentsOf("reply")}</div><div><b>Take 2:</b> ${sentsOf("take2")}</div></div></details>
+    <h3 style="margin-top:14px">Mock call skills (take 2)</h3>
+    ${SKILLS.map(s => `<div class="skill"><div class="row" style="justify-content:space-between"><b class="small">${s.name}</b><div class="rate" data-skill="${s.key}">${[1, 2, 3, 4, 5].map(n => `<button class="${cur.skills[s.key] === n ? "on" : ""}" data-v="${n}">${n}</button>`).join("")}</div></div>
+      <div class="anchors">${[1, 3, 5].map(n => `<span class="${cur.skills[s.key] === n ? "hit" : ""}"><b>${n}</b> ${esc(s.a[n])}</span>`).join(" &nbsp; ")}</div></div>`).join("")}
+    <div class="small" style="margin-top:8px"><b>Red flags you saw</b><br>${[["pitchFirst", "Pitched before asking two questions"], ["argued", "Argued with an objection"], ["defensive", "Got defensive at feedback"], ["noNext", "No dated next step in take 2"]].map(([k, l]) => `<label style="margin-right:14px"><input type="checkbox" data-flag="${k}" ${cur.flags[k] ? "checked" : ""}> ${l}</label>`).join("")}</div>
+    ${manual}`;
+}
+function renderMetrics() {
+  const m = { ...A.metrics, ...Object.fromEntries(Object.entries(cur.metricsEdit).filter(([k, v]) => v !== "" && v != null)) };
+  const f = (k, label, ph) => `<div><label class="f">${label}</label><input data-metric="${k}" value="${esc(m[k] == null ? "" : m[k])}" placeholder="${ph}"></div>`;
+  const checks = [];
+  const d = Number(m.dials), c = Number(m.convos), at = Number(m.attain);
+  if (d && c) { const rate = c / d; checks.push(rate > 0.15 ? `<span class="part">${Math.round(rate * 100)}% of dials became conversations. That's high (benchmarks run about 5 to 15%). Ask how they counted.</span>` : `<span class="ok">${Math.round(rate * 100)}% of dials became conversations, inside the usual 5 to 15%.</span>`); }
+  if (d) checks.push(d < 60 ? `<span class="part">${d} dials a day is under this seat's 75 activities a day.</span>` : `<span class="ok">${d} dials a day meets this seat's 75 activities a day.</span>`);
+  if (at) checks.push(at > 150 ? `<span class="part">${at}% of quota is unusual. Verify in the reference check.</span>` : at < 80 ? `<span class="part">${at}% of quota: ask what got in the way.</span>` : `<span class="ok">${at}% of quota.</span>`);
+  if (!d && !c && !at) checks.push(`<span class="muted">The candidate didn't state dials, conversations or attainment. Not knowing their own numbers is the most common red flag in sales hiring; ask SK2.</span>`);
+  $("metricsBody").innerHTML = `<div class="fields">${f("dials", "Dials a day", "e.g. 80")}${f("convos", "Conversations a day", "e.g. 8")}${f("meetings", "Meetings or orders", "e.g. 15")}${f("attain", "Attainment %", "e.g. 105")}</div>
+    <div class="small" style="margin-top:8px">${checks.map(x => `<div>${x}</div>`).join("")}</div>
+    <h3 style="margin-top:12px">Verify in the reference check</h3>
+    <ul class="cov small" style="padding-left:18px">${A.facts.length ? A.facts.slice(0, 8).map(x => `<li><span class="time">${fmt(x.t)}</span> ${hl(x.s)}</li>`).join("") : `<li class="muted">No numeric claims found.</li>`}</ul>`;
+}
+function renderCoverage() {
+  const lab = { asked: `<span class="ok">Asked</span>`, partly: `<span class="part">Partly</span>`, missed: `<span class="miss">Missed</span>` };
+  $("coverage").innerHTML = A.coverage.length ? `<ul class="cov" style="padding-left:18px">${A.coverage.map(c => `<li>${lab[c.status]} <span class="chip cat">${c.id}</span> ${esc(QBYID[c.id].roleplay ? "Role play redo" : QBYID[c.id].q)} ${c.t != null && c.status !== "missed" ? `<span class="time">${fmt(c.t)}</span>` : ""}</li>`).join("")}</ul>
+    <p class="tiny muted">Coverage compares your questions with the plan in the Interview guide. Asking every candidate the same questions in the same order is what makes scores comparable.</p>` : `<p class="muted small">No planned questions. Pick them in the Interview guide.</p>`;
+}
+function renderFollowups() {
+  const items = [];
+  A.blocks.forEach(b => { if (!b.q || b.section === "warm") return; b.prompts.forEach(p => items.push({ k: (b.plan || b.q.slice(0, 30)) + "|" + p, q: b.q, p, t: b.t })); });
+  A.coverage.filter(c => c.status === "missed").forEach(c => items.push({ k: "miss|" + c.id, q: "Missed in this round", p: QBYID[c.id].roleplay ? "Run the role play redo" : QBYID[c.id].q, t: null }));
+  $("followups").innerHTML = items.length ? items.map(x => `<li><label><input type="checkbox" data-follow="${esc(x.k)}" ${cur.followDone[x.k] ? "checked" : ""}> ${esc(x.p)}</label> <span class="tiny muted">${x.t != null ? fmt(x.t) + " " : ""}${esc(x.q.length > 70 ? x.q.slice(0, 67) + "..." : x.q)}</span></li>`).join("") : `<li class="muted">Nothing to follow up.</li>`;
+}
+function renderValues() {
+  $("values").innerHTML = VALUES.map(v => {
+    const n = cur.ratings[v.key] || 0, ev = cur.evidence[v.key] || [];
+    const sugg = A.S.filter(x => v.signal.test(x.s) && words(x.s) >= 5 && !ev.some(e => e.s === x.s)).slice(0, 3);
+    return `<div class="value"><h3>${esc(v.name)}</h3>
+      <div class="anchors">${[1, 3, 5].map(k => `<div class="${n === k || (n === k - 1 && k > 1 && n % 2 === 0) ? "" : ""}${n === k ? " hit" : ""}"><b>${k}:</b> ${esc(v.anchors[k])}</div>`).join("")}<div class="tiny">2 and 4 fall between the anchors.</div></div>
+      <div class="rate" data-key="${v.key}">${[1, 2, 3, 4, 5].map(k => `<button class="${k === n ? "on" : ""}" data-v="${k}">${k}</button>`).join("")}</div>
+      ${n && !ev.length ? `<div class="banner warn" style="margin:4px 0">Add a quote behind this score: click a line in the answers or use a suggested line below.</div>` : ""}
+      <div class="ev">${ev.map((e, i) => `<div><span class="time">${fmt(e.t)}</span><span>"${esc(e.s)}"</span><button class="x" data-unev="${v.key}|${i}" title="Remove">x</button></div>`).join("")}</div>
+      ${sugg.length ? `<div class="sugg">Lines worth a look:${sugg.map(x => `<div><button class="link" data-addev="${v.key}|${A.S.indexOf(x)}">+ attach</button> ${fmt(x.t)} "${esc(x.s.length > 120 ? x.s.slice(0, 117) + "..." : x.s)}"</div>`).join("")}</div>` : ""}</div>`;
+  }).join("");
+}
+function renderDecision() {
+  const missing = VALUES.filter(v => !cur.ratings[v.key]).map(v => v.name);
+  const locked = missing.length > 0;
+  $("decision").innerHTML = `
+    ${locked ? `<p class="small muted">Score all six areas first (${missing.length} left: ${missing.map(esc).join(", ")}). Deciding before scoring lets one impression drive every score.</p>` : ""}
+    <div class="row">${REC.map(([k, l]) => `<button data-rec="${k}" class="${cur.rec === k ? "primary" : ""}" ${locked ? "disabled" : ""}>${l}</button>`).join("")}</div>
+    <label class="f" style="margin-top:10px">One-line reason (required for the debrief)</label>
+    <input id="rationale" value="${esc(cur.rationale)}" placeholder="e.g. Strong redo after coaching; numbers add up; thin on Sincerity" ${locked ? "disabled" : ""}>
+    ${cur.decidedAt ? `<p class="tiny muted" style="margin:6px 0 0">Decided ${esc(new Date(cur.decidedAt).toLocaleString())}</p>` : ""}
+    ${cur.log.length ? `<details><summary>Change log (${cur.log.length})</summary><div class="log">${cur.log.map(l => `<div>${esc(new Date(l.at).toLocaleString())}: ${esc(l.what)} ${esc(l.from)} to ${esc(l.to)}</div>`).join("")}</div></details>` : ""}`;
+}
+function lintNotes() {
+  const hits = [...new Set(((cur.notes || "").match(NOTE_LINT) || []).map(w => w.toLowerCase()))];
+  $("notesLint").innerHTML = hits.length ? `<div class="banner warn" style="margin-top:6px">Notes are hiring records. Record what was said, not personal traits or protected details. Review: ${hits.map(esc).join(", ")}</div>` : "";
+}
+
+function debriefText() {
+  const r = A, it = cur, L = [];
+  const rp = r.rp;
+  L.push(`INTERVIEW DEBRIEF: ${it.cand}`);
+  L.push(`${it.role || "Role not set"} | ${it.date} | Interviewer: ${it.interviewer}`);
+  L.push(`Length ${r.length != null ? fmt(r.length) : "n/a"} | Candidate talk time ${r.talk}%`);
   L.push("");
-  L.push(`RECOMMENDATION: ${state.rec || "not set"} | Overall: ${state.overall ? state.overall + "/5" : "not rated"}`);
+  L.push(`DECISION: ${it.rec ? recName(it.rec) : "Not decided"}${it.rationale ? ". " + it.rationale : (it.rec ? ". (Reason missing)" : "")}`);
   L.push("");
-  L.push("SCORECARD");
-  VALUES.forEach(v => L.push(`- ${v.name}: ${state.ratings[v.key] ? state.ratings[v.key] + "/5" : "not rated"}${state.valueNotes[v.key] ? ". " + state.valueNotes[v.key] : ""}`));
-  L.push("");
-  L.push("KEY FACTS");
-  (r.facts.length ? r.facts : [{ t: null, s: "None found" }]).forEach(f => L.push(`- ${f.t != null ? "[" + fmt(f.t) + "] " : ""}${f.s}`));
-  L.push("");
-  L.push("QUESTIONS AND ANSWERS");
-  r.blocks.filter(b => b.q).forEach((b, i) => {
-    L.push(`${i + 1}. [${fmt(b.t)}] (${b.cat}) ${b.q}`);
-    b.points.forEach(p => L.push(`   - ${p}`));
-    const meta = [b.values.length ? "Shows: " + b.values.join(", ") : "", b.star.length >= 3 ? "STAR: " + b.star.join(" ") : ""].filter(Boolean).join(" | ");
-    if (meta) L.push(`   ${meta}`);
+  L.push("SCORES (1 to 5, against written anchors)");
+  VALUES.forEach(v => {
+    L.push(`${v.name}: ${it.ratings[v.key] || "not scored"}`);
+    (it.evidence[v.key] || []).slice(0, 3).forEach(e => L.push(`   [${fmt(e.t)}] "${e.s}"`));
   });
-  L.push("");
-  L.push("QUESTIONS THE CANDIDATE ASKED");
-  (r.candQs.length ? r.candQs : [{ t: null, s: "None captured" }]).forEach(f => L.push(`- ${f.s}`));
-  if (state.notes) { L.push(""); L.push("MY NOTES"); L.push(state.notes); }
+  if (rp.found) {
+    const e = rpEval(r.turns, rp, it.coachText != null ? it.coachText : coachLine(r.turns, rp));
+    L.push(""); L.push("ROLE PLAY");
+    L.push(`Coaching line: ${it.coachText != null ? it.coachText : coachLine(r.turns, rp)}`);
+    L.push(`Coached words in take 2: ${e.hit.length} of ${e.coachWords.length}. Questions asked: ${e.q1} then ${e.q2}. Self-assessment: ${e.selfDx}.`);
+    const sk = SKILLS.filter(s => it.skills[s.key]).map(s => `${s.name} ${it.skills[s.key]}`);
+    if (sk.length) L.push(`Skills: ${sk.join(", ")}`);
+    const fl = Object.entries(it.flags).filter(([k, v]) => v).map(([k]) => ({ pitchFirst: "pitched before asking", argued: "argued with objection", defensive: "defensive at feedback", noNext: "no dated next step" }[k]));
+    if (fl.length) L.push(`Red flags: ${fl.join(", ")}`);
+  }
+  const m = { ...r.metrics, ...Object.fromEntries(Object.entries(it.metricsEdit).filter(([k, v]) => v !== "" && v != null)) };
+  const ms = [m.dials && `${m.dials} dials a day`, m.convos && `${m.convos} conversations`, m.meetings && `${m.meetings} meetings or orders`, m.attain && `${m.attain}% of quota`].filter(Boolean);
+  if (ms.length) { L.push(""); L.push("NUMBERS STATED: " + ms.join(", ")); }
+  const miss = r.coverage.filter(c => c.status === "missed").map(c => c.id);
+  if (miss.length) { L.push(""); L.push("PLANNED QUESTIONS NOT ASKED: " + miss.join(", ")); }
+  const fu = [];
+  r.blocks.forEach(b => { if (b.q && b.section !== "warm") b.prompts.forEach(p => { const k = (b.plan || b.q.slice(0, 30)) + "|" + p; if (!it.followDone[k]) fu.push(`${p} (re: ${b.q.slice(0, 60)})`); }); });
+  if (fu.length) { L.push(""); L.push("FOLLOW UP NEXT ROUND"); fu.slice(0, 6).forEach(x => L.push("- " + x)); }
+  if (r.candQs.length) { L.push(""); L.push("CANDIDATE ASKED"); r.candQs.forEach(q => L.push("- " + q.s)); }
+  if (it.notes) { L.push(""); L.push("NOTES"); L.push(it.notes); }
+  L.push(""); L.push(`Record kept until: ${keepUntil(it)}`);
   return L.join("\n");
 }
 
-async function readFile(f) {
-  if (/\.docx$/i.test(f.name)) return docxText(await f.arrayBuffer());
-  return f.text();
+// ================= EVENTS =================
+document.querySelectorAll("nav button[data-view]").forEach(b => b.onclick = () => show(b.dataset.view));
+$("newBtn").onclick = () => { $("raw").value = ""; $("msg").textContent = ""; show("new"); };
+function startFrom(raw) {
+  raw = (raw || "").trim();
+  if (!raw) { $("msg").textContent = "Paste or drop a transcript first."; return; }
+  if (parseTranscript(raw).length < 2) { $("msg").textContent = "Couldn't find speakers in that text. Paste the full Teams transcript with names and times."; return; }
+  const it = newInterview(raw); DB.interviews[it.id] = it; save(); openInterview(it.id, true);
+  return it;
 }
+$("goBtn").onclick = () => startFrom($("raw").value);
+$("sampleBtn").onclick = () => { const it = startFrom(SAMPLE); if (it) { it.role = "Sample (delete anytime)"; $("role").value = it.role; save(); } };
+$("pickBtn").onclick = () => $("file").click();
+$("file").onchange = async e => { const f = e.target.files[0]; if (!f) return; try { $("raw").value = await readFile(f); $("msg").textContent = "Loaded " + f.name; } catch (err) { $("msg").textContent = err.message; } };
+const drop = $("drop");
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (!f) return; try { const t = await readFile(f); $("raw").value = t; startFrom(t); } catch (err) { $("msg").textContent = err.message; } };
+
+$("candSel").onchange = e => { cur.cand = e.target.value; touch(); renderInterview(); };
+$("intSel").onchange = e => { cur.interviewer = e.target.value; touch(); renderInterview(); };
+$("role").oninput = e => { cur.role = e.target.value; touch(); };
+$("date").oninput = e => { cur.date = e.target.value; touch(); };
+$("myNotes").oninput = e => { cur.notes = e.target.value; touch(); lintNotes(); };
+$("holdChk").onchange = e => { cur.hold = e.target.checked; touch("legal hold", !e.target.checked ? "on" : "off", e.target.checked ? "on" : "off"); $("keepUntil").textContent = "Keep until: " + keepUntil(cur); };
+
+$("values").onclick = e => {
+  const b = e.target.closest(".rate button[data-v]");
+  if (b) { const k = b.parentElement.dataset.key, v = +b.dataset.v, old = cur.ratings[k]; cur.ratings[k] = old === v ? undefined : v; if (cur.ratings[k] === undefined) delete cur.ratings[k]; touch(VALUES.find(x => x.key === k).name + " score", old, cur.ratings[k]); renderValues(); renderDecision(); $("patternMine").innerHTML = patternNote(cur.id); return; }
+  const a = e.target.closest("[data-addev]");
+  if (a) { const [k, i] = a.dataset.addev.split("|"); attach(k, +i); return; }
+  const x = e.target.closest("[data-unev]");
+  if (x) { const [k, i] = x.dataset.unev.split("|"); cur.evidence[k].splice(+i, 1); touch(); renderValues(); renderQA(); renderRP(); }
+};
+function attach(key, si) {
+  const s = A.S[si]; if (!s) return;
+  cur.evidence[key] = cur.evidence[key] || [];
+  if (!cur.evidence[key].some(e => e.s === s.s && e.t === s.t)) cur.evidence[key].push({ t: s.t, s: s.s });
+  touch(); renderValues(); renderQA(); renderRP(); toast("Attached to " + VALUES.find(v => v.key === key).name);
+}
+const menu = $("menu");
+document.addEventListener("click", e => {
+  const s = e.target.closest(".sent");
+  if (s && view === "interview") {
+    const k = +s.dataset.s, r = s.getBoundingClientRect();
+    menu.innerHTML = `<div class="t">Attach as evidence for</div>` + VALUES.map(v => `<button data-attach="${v.key}|${k}">${esc(v.name)}</button>`).join("");
+    menu.style.left = Math.min(r.left + window.scrollX, window.innerWidth - 230) + "px"; menu.style.top = (r.bottom + window.scrollY + 4) + "px"; menu.style.display = "block";
+    e.stopPropagation(); return;
+  }
+  const m = e.target.closest("[data-attach]");
+  if (m) { const [k, i] = m.dataset.attach.split("|"); attach(k, +i); }
+  menu.style.display = "none";
+});
+$("decision").onclick = e => {
+  const b = e.target.closest("[data-rec]"); if (!b || b.disabled) return;
+  const old = cur.rec; cur.rec = b.dataset.rec;
+  if (!cur.decidedAt) cur.decidedAt = new Date().toISOString(); else touch("decision", recName(old), recName(cur.rec));
+  touch(); renderDecision(); $("keepUntil").textContent = "Keep until: " + keepUntil(cur);
+  if (!cur.rationale) setTimeout(() => { const r = $("rationale"); if (r) r.focus(); }, 0);
+};
+$("decision").oninput = e => { if (e.target.id === "rationale") { cur.rationale = e.target.value; touch(); } };
+$("rpBody").onclick = e => {
+  const b = e.target.closest(".rate[data-skill] button"); if (b) { const k = b.parentElement.dataset.skill, v = +b.dataset.v; cur.skills[k] = cur.skills[k] === v ? undefined : v; touch(); renderRP(); return; }
+  if (e.target.id === "rpClear") { cur.rpManual = null; cur.coachText = null; touch(); renderInterview(); }
+};
+$("rpBody").onchange = e => {
+  const f = e.target.dataset.flag; if (f) { cur.flags[f] = e.target.checked; touch(); return; }
+  const k = e.target.dataset.rp;
+  if (k) {
+    const rp = A.rp; const man = cur.rpManual || { start: rp.start, assess: rp.assess, coach: rp.coach, take2: rp.take2, end: rp.end };
+    man[k] = +e.target.value; if (k === "end" && man.end < 0) man.end = A.turns.length;
+    cur.rpManual = man.start >= 0 ? man : null; touch(); renderInterview();
+  }
+};
+$("rpBody").oninput = e => { if (e.target.id === "coachIn") { cur.coachText = e.target.value; touch(); clearTimeout(renderRP.h); renderRP.h = setTimeout(() => { const pos = e.target.selectionStart; renderRP(); const n = $("coachIn"); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }, 700); } };
+$("metricsBody").oninput = e => { const k = e.target.dataset.metric; if (k) { cur.metricsEdit[k] = e.target.value; touch(); clearTimeout(renderMetrics.h); renderMetrics.h = setTimeout(() => { renderMetrics(); const n = document.querySelector(`[data-metric="${k}"]`); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }, 900); } };
+$("followups").onchange = e => { const k = e.target.dataset.follow; if (k) { cur.followDone[k] = e.target.checked; touch(); } };
+$("copyBtn").onclick = async () => { if (cur.rec && !cur.rationale) toast("Add the one-line reason first"); try { await navigator.clipboard.writeText(debriefText()); toast("Debrief copied. Paste it into Teams chat or email."); } catch (e) { toast("Copy blocked. Use Download."); } };
+$("dlBtn").onclick = () => download(`Interview debrief ${cur.cand} ${cur.date}.txt`, debriefText());
+$("printBtn").onclick = () => { document.querySelectorAll("#v-interview details").forEach(d => d.open = true); try { window.print(); } catch (e) {} };
+
+async function readFile(f) { if (/\.docx$/i.test(f.name)) return docxText(await f.arrayBuffer()); return f.text(); }
 async function docxText(buf) {
   const u8 = new Uint8Array(buf), dv = new DataView(buf);
   let eocd = -1;
@@ -452,9 +1123,7 @@ async function docxText(buf) {
     if (name === "word/document.xml") {
       const lnl = dv.getUint16(off + 26, true), lel = dv.getUint16(off + 28, true);
       const data = u8.slice(off + 30 + lnl + lel, off + 30 + lnl + lel + csize);
-      let xml;
-      if (method === 0) xml = new TextDecoder().decode(data);
-      else xml = await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+      const xml = method === 0 ? new TextDecoder().decode(data) : await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
       return xml.replace(/<w:tab\/>/g, " ").replace(/<w:br\/>/g, "\n").replace(/<\/w:p>/g, "\n").replace(/<[^>]+>/g, "")
         .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'");
     }
@@ -464,81 +1133,103 @@ async function docxText(buf) {
 }
 
 const SAMPLE = `Sam Carter   0:04
-Hi Jordan, thanks for joining. Can you hear me okay?
+Hi Jordan, thanks for joining. Before we start, I'm transcribing this call for my notes. Is that okay?
 
-Jordan Lee   0:08
-Yes, loud and clear. Thanks for having me.
+Jordan Lee   0:09
+Yes, that's fine.
 
 Sam Carter   0:12
-Great. To start, tell me a little about yourself.
+Great. Tell me a bit about yourself.
 
 Jordan Lee   0:16
-Sure. I spent three years in inside sales at a home services company. I made about 90 calls a day and booked 15 appointments a week on average. Before that I worked in a call center, which is where I learned to really listen to people. I ranked number one on my team for six months straight.
+I spent three years in inside sales at a home services company. I made about 90 calls a day and booked 15 appointments a week on average. Before that I worked in a call center.
 
 Sam Carter   1:20
-Nice. Tell me about a time you had to keep going after a lot of rejection.
+Tell me about a phone call where you realized partway through that the person on the other end was not happy, even though they never said so. What tipped you off?
 
-Jordan Lee   1:26
-When I started, my goal was 10 meetings a week and I was getting maybe two. I needed to change my approach. I asked my manager for feedback and recorded my own calls. I realized I was pitching too early, so I started asking two questions about their situation first. Within two months I was booking 12 meetings a week and I closed $40,000 in new business that quarter.
+Jordan Lee   1:28
+Last March I called a homeowner about a service renewal. She went quiet and her answers got short, so I could tell she was frustrated. I paused and said it sounds like the timing is bad. She told me her last technician never showed up. I apologized, got her a same-week visit, and she renewed for two years.
 
-Sam Carter   2:45
-How do you keep your pipeline organized?
+Sam Carter   2:30
+What did you change after that?
 
-Jordan Lee   2:49
-I live in the CRM. Every call gets logged the same day with a next step and a date. I review my pipeline every Friday so nothing slips, and I follow up within 24 hours after every conversation.
+Jordan Lee   2:34
+Now I ask about their last visit before I mention the renewal. I learned that the complaint usually comes first.
 
-Sam Carter   3:30
-Why are you interested in Rhythm?
+Sam Carter   3:00
+Walk me through your highest-volume day on the phone. How many dials, how many conversations, and how did you feel on call 70?
 
-Jordan Lee   3:34
-Honestly, my dad uses an oxygen concentrator, so I've seen how much that equipment matters. I also want a role with real coaching where I can grow into field sales.
+Jordan Lee   3:08
+My best day was 120 dials and about 14 conversations. We pushed hard as a team that week and we hit our number and we celebrated.
 
-Sam Carter   4:10
-Do you have any questions for me?
+Sam Carter   3:40
+What was your part, personally?
 
-Jordan Lee   4:13
-Yes. What did your best rep do differently in their first 90 days? And how is success measured for this role in the first quarter?
+Jordan Lee   3:44
+I booked six of the team's eleven appointments that day.
+
+Sam Carter   4:05
+Tell me about a month you missed your number. Why, and what did you change?
+
+Jordan Lee   4:10
+Honestly the leads were bad that month and my manager never gave us good lists. I'm just not great with cold lists.
 
 Sam Carter   4:40
+Tell me about a time a customer pushed for a date, price or outcome you weren't sure you could deliver. What did you say?
+
+Jordan Lee   4:45
+I would tell them the truth. I usually say I'll find out and call back.
+
+Sam Carter   5:10
+Let's do a quick role play. I'll be the owner of a medical supply company and you're calling me cold. Go ahead.
+
+Jordan Lee   5:18
+Hi, this is Jordan with Rhythm. Did I catch you at a bad time? We have great oxygen concentrators and I'd love to send you a price sheet.
+
+Sam Carter   5:30
+We already have a supplier.
+
+Jordan Lee   5:33
+Totally understand. Our prices are really good though. Can I send you the sheet?
+
+Sam Carter   5:42
+How do you think that went? One thing you'd keep, one you'd change?
+
+Jordan Lee   5:47
+I pitched too early. I'd keep the energy but I should have asked about their current supplier.
+
+Sam Carter   6:00
+Good. Try it again, and this time ask what they're using now before you pitch.
+
+Jordan Lee   6:08
+Got it. So you mean ask about their current supplier first? Let me try that.
+
+Sam Carter   6:14
+Yes. Let's run it again from the top.
+
+Jordan Lee   6:18
+Hi, this is Jordan with Rhythm. I'm calling because a few providers in your area told me portable oxygen backorders are slowing them down. What are you using now for portable units?
+
+Sam Carter   6:30
+We use another brand, and yes, backorders are a pain.
+
+Jordan Lee   6:35
+How long are you waiting on replacements right now? We swap broken units right away through our replacement program. Could we set fifteen minutes Thursday at 2 to walk through it?
+
+Sam Carter   6:50
+Okay, that works. Let's stop the role play there. Do you have any questions for me?
+
+Jordan Lee   6:56
+Yes. What did your best rep do differently in their first 90 days? And how is success measured for this role in the first quarter?
+
+Sam Carter   7:20
 Great questions. Our best reps hit their call numbers every day and ask a lot of questions.`;
 
-// events
-$("goBtn").onclick = () => { state.raw = $("raw").value.trim(); if (!state.raw) { $("msg").textContent = "Paste or drop a transcript first."; return; } run(true); };
-$("sampleBtn").onclick = () => { $("raw").value = SAMPLE; state.raw = SAMPLE; state.role = state.role || "Business Development Specialist"; run(true); };
-$("pickBtn").onclick = () => $("file").click();
-$("file").onchange = async e => { const f = e.target.files[0]; if (f) { try { $("raw").value = await readFile(f); $("msg").textContent = "Loaded " + f.name; } catch (err) { $("msg").textContent = err.message; } } };
-const drop = $("drop");
-drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
-drop.ondragleave = () => drop.classList.remove("over");
-drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (!f) return; try { $("raw").value = await readFile(f); state.raw = $("raw").value.trim(); run(true); } catch (err) { $("msg").textContent = err.message; } };
-$("candSel").onchange = e => { state.cand = e.target.value; render(); save(); };
-$("intSel").onchange = e => { state.interviewer = e.target.value; render(); save(); };
-$("role").oninput = e => { state.role = e.target.value; save(); };
-$("date").oninput = e => { state.date = e.target.value; save(); };
-$("rec").onchange = e => { state.rec = e.target.value; save(); };
-$("myNotes").oninput = e => { state.notes = e.target.value; save(); };
-$("values").onclick = e => { const b = e.target.closest("button[data-v]"); if (!b) return; const k = b.parentElement.dataset.key; state.ratings[k] = +b.dataset.v; render(); save(); };
-$("values").oninput = e => { const k = e.target.dataset.note; if (k) { state.valueNotes[k] = e.target.value; save(); } };
-$("overall").onclick = e => { const b = e.target.closest("button[data-v]"); if (!b) return; state.overall = +b.dataset.v; render(); save(); };
-$("copyBtn").onclick = async () => { try { await navigator.clipboard.writeText(notesText()); toast("Notes copied"); } catch (e) { toast("Copy blocked; use Download"); } };
-$("dlBtn").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([notesText()], { type: "text/plain" })); a.download = `Interview notes ${state.cand} ${state.date}.txt`; a.click(); };
-$("printBtn").onclick = () => { document.querySelectorAll("details").forEach(d => d.open = true); window.print(); };
-$("newBtn").onclick = () => {
-  if (!confirmNew()) return;
-  state = { raw: "", cand: "", interviewer: "", role: state.role, date: "", ratings: {}, overall: 0, rec: "", notes: "", valueNotes: {} };
-  save(); $("raw").value = ""; $("msg").textContent = "";
-  $("out").classList.add("hidden"); $("inputCard").classList.remove("hidden"); $("newBtn").classList.add("hidden");
-};
-function confirmNew() {
-  const b = $("newBtn");
-  if (b.dataset.armed) { delete b.dataset.armed; b.textContent = "New interview"; return true; }
-  b.dataset.armed = "1"; b.textContent = "Click again to clear"; setTimeout(() => { delete b.dataset.armed; b.textContent = "New interview"; }, 3000);
-  return false;
-}
-// inside a sandboxed viewer, downloads and print are blocked: show only Copy there
-try { if (window.self !== window.top) { $("dlBtn").classList.add("hidden"); $("printBtn").classList.add("hidden"); } } catch (e) { $("dlBtn").classList.add("hidden"); $("printBtn").classList.add("hidden"); }
-// restore last session
-try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && s.raw) { state = { ...state, ...s }; $("raw").value = s.raw; run(false); } } catch (e) {}
+// ================= START =================
+try { if (window.self !== window.top) { $("dlBtn").classList.add("hidden"); $("printBtn").classList.add("hidden"); $("guidePrint").classList.add("hidden"); $("csvBtn").classList.add("hidden"); } } catch (e) {}
+load();
+$("storeWarn").classList.toggle("hidden", canStore);
+show(Object.keys(DB.interviews).length ? "library" : "new");
 </script>
 </body>
 </html>
