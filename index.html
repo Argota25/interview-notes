@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interview Notes</title>
+<style>
+  :root {
+    --ink: #1c2430; --muted: #5d6b7a; --line: #dde3ea; --bg: #f5f7f9; --card: #ffffff;
+    --accent: #0f6e6e; --accent-soft: #e3f1f1; --mark: #fff1b8; --warn: #9a5b00;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.5; font-size: 15px; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  header h1 { font-size: 19px; margin: 0; font-weight: 650; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  main { max-width: 1240px; margin: 0 auto; padding: 20px 24px 60px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+  h2 { font-size: 16px; margin: 0 0 10px; font-weight: 650; }
+  h3 { font-size: 14px; margin: 0 0 6px; font-weight: 650; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  button { font: inherit; font-size: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: 8px 14px; border-radius: 7px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(1.08); }
+  textarea, input, select { font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; width: 100%; background: #fff; color: var(--ink); }
+  textarea { resize: vertical; }
+  .drop { border: 2px dashed var(--line); border-radius: 10px; padding: 22px; text-align: center; color: var(--muted); margin-bottom: 12px; }
+  .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+  .side { position: sticky; top: 16px; }
+  .fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .fields label, .side label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  .stats { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 12px; }
+  .stat b { display: block; font-size: 20px; }
+  .stat span { font-size: 12px; color: var(--muted); }
+  .qa { border-top: 1px solid var(--line); padding: 14px 0; }
+  .qa:first-of-type { border-top: 0; padding-top: 4px; }
+  .qhead { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .time { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 42px; }
+  .q { font-weight: 600; }
+  .tag { display: inline-block; font-size: 11.5px; padding: 1px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); margin: 2px 4px 0 0; white-space: nowrap; }
+  .tag.cat { background: #eef0f3; color: var(--muted); }
+  .tag.star { background: #fff5e0; color: var(--warn); }
+  ul.points { margin: 8px 0 4px 50px; padding-left: 16px; }
+  ul.points li { margin-bottom: 4px; }
+  details { margin: 4px 0 0 50px; }
+  details summary { cursor: pointer; color: var(--accent); font-size: 13px; }
+  .full { white-space: pre-wrap; font-size: 13.5px; background: var(--bg); border-radius: 7px; padding: 10px 12px; margin-top: 6px; }
+  .full .who { font-weight: 600; }
+  mark { background: var(--mark); color: inherit; padding: 0 2px; border-radius: 3px; }
+  .value { border-top: 1px solid var(--line); padding: 10px 0; }
+  .value:first-child { border-top: 0; padding-top: 0; }
+  .rate { display: flex; gap: 4px; margin: 6px 0; }
+  .rate button { padding: 3px 0; width: 34px; font-size: 13px; }
+  .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .evidence { font-size: 12.5px; color: var(--muted); margin: 4px 0 6px; }
+  .evidence div { margin-bottom: 3px; }
+  .facts li { margin-bottom: 5px; }
+  .hidden { display: none; }
+  .note-help { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  ol.steps { margin: 6px 0 0; padding-left: 20px; }
+  ol.steps li { margin-bottom: 4px; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 8px 16px; border-radius: 7px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } .side { position: static; } .fields { grid-template-columns: 1fr 1fr; } }
+  @media print {
+    header .row, #inputCard, .no-print, details summary { display: none !important; }
+    body { background: #fff; } .card { border: 0; padding: 0; } .grid { grid-template-columns: 1fr; } details { display: block; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Interview Notes</h1>
+    <p>Turns a Teams transcript into organized interview notes. Runs in your browser; nothing is uploaded.</p>
+  </div>
+  <div class="row">
+    <button id="newBtn" class="hidden">New interview</button>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="inputCard">
+    <h2>1. Add the transcript</h2>
+    <div class="drop" id="drop">Drop the Teams transcript file here (.vtt, .txt, or .docx)<br><span class="small">or paste the transcript text below</span></div>
+    <textarea id="raw" rows="7" placeholder="Paste the transcript here..."></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="primary" id="goBtn">Organize notes</button>
+      <input type="file" id="file" accept=".vtt,.txt,.docx" class="hidden">
+      <button id="pickBtn">Choose file</button>
+      <button id="sampleBtn">Try a sample</button>
+      <span id="msg" class="small muted"></span>
+    </div>
+    <details style="margin:14px 0 0">
+      <summary>How to get the transcript from Microsoft Teams</summary>
+      <ol class="steps small">
+        <li>When the interview starts, tell the candidate the call is being transcribed for notes.</li>
+        <li>In the meeting, click <b>More (...)</b>, then <b>Record and transcribe</b>, then <b>Start transcription</b>. Teams shows everyone a notice that transcription is on.</li>
+        <li>After the call, open the meeting chat or the event in your Teams calendar and go to <b>Recap</b>, then <b>Transcript</b>.</li>
+        <li>Click <b>Download</b> and choose .vtt or .docx, then drop that file here.</li>
+      </ol>
+      <p class="small muted">If you don't see Start transcription, your IT admin controls that setting.</p>
+    </details>
+  </section>
+
+  <div id="out" class="hidden">
+    <section class="card">
+      <div class="fields">
+        <div><label>Candidate</label><select id="candSel"></select></div>
+        <div><label>Interviewer</label><select id="intSel"></select></div>
+        <div><label>Role</label><input id="role" placeholder="e.g. Business Development Specialist"></div>
+        <div><label>Date</label><input id="date" type="date"></div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <div class="grid">
+      <div>
+        <section class="card">
+          <h2>Questions and answers</h2>
+          <p class="small muted" style="margin-top:-4px">Each question you asked, with the candidate's key points. Numbers are highlighted. Open "Full answer" for the exact words.</p>
+          <div id="qaList"></div>
+        </section>
+        <section class="card">
+          <h2>Key facts and numbers the candidate gave</h2>
+          <ul class="facts" id="facts"></ul>
+        </section>
+        <section class="card">
+          <h2>Questions the candidate asked</h2>
+          <ul class="facts" id="candQs"></ul>
+        </section>
+      </div>
+
+      <aside class="side">
+        <section class="card">
+          <h2>Scorecard</h2>
+          <div id="values"></div>
+        </section>
+        <section class="card">
+          <h2>Decision</h2>
+          <label>Overall</label>
+          <div class="rate" id="overall"></div>
+          <label style="margin-top:8px">Recommendation</label>
+          <select id="rec"><option value="">Choose</option><option>Advance</option><option>Hold</option><option>Pass</option></select>
+          <label style="margin-top:10px">My notes</label>
+          <textarea id="myNotes" rows="5" placeholder="Anything else to remember..."></textarea>
+          <div class="row" style="margin-top:12px">
+            <button class="primary" id="copyBtn">Copy notes</button>
+            <button id="dlBtn">Download .txt</button>
+            <button id="printBtn">Print</button>
+          </div>
+          <p class="note-help">Your ratings and notes save on this computer automatically.</p>
+        </section>
+      </aside>
+    </div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+// PARSER START
+const VALUES = [
+  { key: "eq", name: "Emotional Intelligence", re: /\b(listen\w*|understand\w*|empath\w*|feel|feeling\w*|felt|rapport|relationship\w*|emotion\w*|connect\w*|patien(t|ce)|perspective)\b/i },
+  { key: "grit", name: "Grit", re: /\b(calls?|dial\w*|reject\w*|persist\w*|kept going|kept at|grind\w*|every day|daily|hard|tough|failed|failure|setback\w*|didn't give up|push(ed)? through|80|100)\b/i },
+  { key: "growth", name: "Growth Mindset", re: /\b(learn\w*|coach\w*|feedback|improv\w*|taught|teach\w*|mentor\w*|practic\w*|stud(y|ied)|curious|curiosity|adapt\w*)\b/i },
+  { key: "sincerity", name: "Sincerity", re: /\b(honest\w*|truth\w*|genuine\w*|sincer\w*|integrity|follow(ed)? through|trust\w*|promis\w*|care[ds]?|caring|right thing|transparen\w*)\b/i },
+  { key: "sales", name: "Sales and phone skills", re: /\b(pipeline|crm|prospect\w*|cold call\w*|quota|close[ds]?|closing|discovery|objection\w*|deal\w*|follow[- ]?up\w*|decision maker\w*|gatekeeper\w*|upsell\w*)\b/i }
+];
+const CATS = [
+  ["Intro", /about yourself|walk me through|your background|introduce yourself/i],
+  ["Motivation", /why (rhythm|this|us|our|the role|sales|do you want|are you|leave|leaving)|what interests|what drew|what attracted/i],
+  ["Behavioral", /time (when|you|that)|an example|tell me about a|describe a (situation|time)|share a/i],
+  ["Situational", /what would you|how would you|if you (were|had|got)|imagine/i],
+  ["Logistics", /salary|compensation|pay|start date|when can you start|availab|commute|in office|in-office|schedule|relocat|background check/i],
+  ["Sales skills", /cold call|dials?|objection|pipeline|quota|crm|clos(e|ing)|prospect|rejection|phone/i],
+  ["Wrap up", /questions for (me|us)|anything else|any questions/i]
+];
+const FACT_RE = /(\$\s?\d[\d,.]*\s?(k|K|M)?|\b\d+(\.\d+)?\s?%|\b\d[\d,]*\+?\s?(k|K)?\s?(to \d[\d,]*\s?)?(calls?|dials?|accounts?|clients?|customers?|firms?|years?|months?|weeks?|deals?|people|reps?|pounds|lbs|sessions?|meetings?|appointments?|leads?|a day|per day|a week|a month|per month|times)\b|\b#\s?1\b|\bnumber one\b)/gi;
+const NUM_HL = /(\$\s?\d[\d,.]*\s?(k|K|M)?|\b\d[\d,.]*\+?\s?%?|\b#\s?1\b|\bnumber one\b)/gi;
+const STAR = {
+  S: /\b(when (I|we)|at my|we had|there was|the situation|our team|i was working|back when|my last)\b/i,
+  T: /\b(my goal|i needed to|i had to|we needed|tasked|responsible for|quota|target|the challenge)\b/i,
+  A: /\b(I (built|created|called|asked|set up|started|reached|researched|worked|made|decided|pulled|trained|led|focused|changed|tried|offered|listened|explained|took))\b/i,
+  R: /(\$\s?\d|\d+\s?%|\b(closed|signed|increas\w*|grew|doubled|tripled|result\w*|ended up|went from|dropped|saved|won|ranked|promoted)\b)/i
+};
+
+function toSec(t) {
+  if (!t) return null;
+  const p = t.replace(",", ".").split(":").map(Number);
+  if (p.some(isNaN)) return null;
+  return p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + p[1];
+}
+function fmt(s) {
+  if (s == null) return "";
+  s = Math.floor(s);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
+  return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0");
+}
+function merge(turns) {
+  const out = [];
+  for (const t of turns) {
+    t.text = t.text.replace(/\s+/g, " ").trim();
+    if (!t.text) continue;
+    const last = out[out.length - 1];
+    if (last && last.who === t.who) last.text += " " + t.text;
+    else out.push({ ...t });
+  }
+  return out;
+}
+function parseVTT(text) {
+  const turns = [];
+  for (const block of text.replace(/\r/g, "").split(/\n\s*\n/)) {
+    const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+    const ti = lines.findIndex(l => /-->/.test(l));
+    if (ti < 0) continue;
+    const start = toSec(lines[ti].split("-->")[0].trim());
+    let body = lines.slice(ti + 1).join(" ");
+    let who = "Speaker";
+    const v = body.match(/<v\s+([^>]+)>/i);
+    if (v) who = v[1].trim();
+    else { const c = body.match(/^([A-Z][^:]{1,40}):\s/); if (c) { who = c[1].trim(); body = body.slice(c[0].length); } }
+    body = body.replace(/<[^>]+>/g, "");
+    turns.push({ who, t: start, text: body });
+  }
+  return merge(turns);
+}
+function parseText(text) {
+  const lines = text.replace(/\r/g, "").split("\n").map(l => l.trim());
+  const TIME = "(\\d{1,2}:\\d{2}(?::\\d{2})?(?:[.,]\\d+)?)";
+  const headerSame = new RegExp("^(.{2,60}?)\\s+" + TIME + "\\s*$");
+  const timeOnly = new RegExp("^\\[?" + TIME + "\\]?$");
+  const bracket = new RegExp("^\\[?" + TIME + "\\]?\\s*[-|]?\\s*([^:]{2,50}):\\s*(.*)$");
+  const colon = /^([A-Z][\w.'\-]*(?: [A-Z][\w.'\-]*){0,3}):\s+(.*)$/;
+  const turns = [];
+  let cur = null;
+  const skip = /(started|stopped) transcription|^transcript$|^meeting (title|transcript)/i;
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i];
+    if (!l || skip.test(l)) continue;
+    let m;
+    if ((m = l.match(bracket))) { cur = { who: m[2].trim(), t: toSec(m[1]), text: m[3] }; turns.push(cur); continue; }
+    if ((m = l.match(headerSame)) && m[1].split(" ").length <= 6 && !/[.?!]$/.test(m[1])) { cur = { who: m[1].trim(), t: toSec(m[2]), text: "" }; turns.push(cur); continue; }
+    if ((m = l.match(timeOnly))) {
+      const prev = turns.length && cur && cur.text && cur.text.split(" ").length <= 5 && !/[.?!,]$/.test(cur.text) ? cur : null;
+      if (prev && prev.text === lines[i - 1]) { prev.who = prev.text; prev.text = ""; prev.t = toSec(m[1]); }
+      else if (lines[i - 1] && lines[i - 1].split(" ").length <= 5 && !/[.?!,]$/.test(lines[i - 1])) {
+        if (cur && cur.text.endsWith(lines[i - 1])) cur.text = cur.text.slice(0, -lines[i - 1].length);
+        cur = { who: lines[i - 1], t: toSec(m[1]), text: "" }; turns.push(cur);
+      }
+      continue;
+    }
+    if ((m = l.match(colon)) && !/^(https?|note|ps)$/i.test(m[1])) { cur = { who: m[1].trim(), t: null, text: m[2] }; turns.push(cur); continue; }
+    if (cur) cur.text += (cur.text ? " " : "") + l;
+  }
+  return merge(turns.filter(t => t.who));
+}
+function parseTranscript(text) {
+  return /-->/.test(text) ? parseVTT(text) : parseText(text);
+}
+function sentences(text) {
+  return (text.match(/[^.!?]+[.!?]*/g) || []).map(s => s.trim()).filter(s => s.length > 1);
+}
+function words(text) { return (text.match(/\S+/g) || []).length; }
+const SMALL_TALK = /\b(can you hear|hear me|see me|see my screen|how are you|how's it going|how is your (day|week)|how was your (day|weekend)|are you ready|ready to (get started|start)|sound good)\b/i;
+function isQuestion(text) {
+  if (SMALL_TALK.test(text) && words(text) < 14) return false;
+  return /\?/.test(text) || /\b(tell me|walk me|describe|talk (to me )?about|give me an example|share (with me|a time)|explain)\b/i.test(text);
+}
+function questionText(text) {
+  const ss = sentences(text);
+  const q = ss.filter(s => /\?$/.test(s) || /\b(tell me|walk me|describe|talk (to me )?about|give me an example|share|explain)\b/i.test(s));
+  return (q.length ? q.slice(-2) : ss.slice(-1)).join(" ");
+}
+function category(q) {
+  for (const [name, re] of CATS) if (re.test(q)) return name;
+  return "General";
+}
+function keyPoints(answer) {
+  const ss = sentences(answer).filter(s => words(s) >= 4);
+  if (!ss.length) return [];
+  const pick = new Set([0]);
+  ss.forEach((s, i) => { FACT_RE.lastIndex = 0; if (FACT_RE.test(s)) pick.add(i); });
+  ss.forEach((s, i) => { if (STAR.R.test(s)) pick.add(i); });
+  return [...pick].sort((a, b) => a - b).slice(0, 4).map(i => ss[i]);
+}
+function analyze(turns, cand, interviewer) {
+  const blocks = [];
+  let cur = { q: null, t: turns.length ? turns[0].t : null, cat: "Opening", answer: "", lines: [] };
+  for (const t of turns) {
+    const isInt = t.who === interviewer;
+    if (isInt && isQuestion(t.text) && words(t.text) >= 2) {
+      if (cur.q || cur.answer) blocks.push(cur);
+      const q = questionText(t.text);
+      cur = { q, t: t.t, cat: category(t.text), answer: "", lines: [t] };
+    } else {
+      cur.lines.push(t);
+      if (t.who === cand) cur.answer += (cur.answer ? " " : "") + t.text;
+    }
+  }
+  if (cur.q || cur.answer) blocks.push(cur);
+  for (const b of blocks) {
+    b.points = keyPoints(b.answer);
+    b.values = VALUES.filter(v => v.re.test(b.answer)).map(v => v.name);
+    b.star = Object.keys(STAR).filter(k => STAR[k].test(b.answer));
+    b.words = words(b.answer);
+  }
+  const facts = [], candQs = [], evidence = {};
+  VALUES.forEach(v => evidence[v.key] = []);
+  for (const t of turns) {
+    if (t.who !== cand) continue;
+    for (const s of sentences(t.text)) {
+      FACT_RE.lastIndex = 0;
+      if (FACT_RE.test(s) && words(s) >= 4) facts.push({ t: t.t, s });
+      if (/\?$/.test(s) && words(s) >= 5 && !/^(you know|right|does that make sense|make sense)/i.test(s)) candQs.push({ t: t.t, s });
+      for (const v of VALUES) if (v.re.test(s) && words(s) >= 6) evidence[v.key].push({ t: t.t, s });
+    }
+  }
+  const wc = {};
+  turns.forEach(t => wc[t.who] = (wc[t.who] || 0) + words(t.text));
+  const total = Object.values(wc).reduce((a, b) => a + b, 0) || 1;
+  const times = turns.map(t => t.t).filter(x => x != null);
+  return {
+    blocks, facts, candQs, evidence,
+    talk: Math.round(100 * (wc[cand] || 0) / total),
+    length: times.length ? Math.max(...times) - Math.min(...times) : null,
+    questions: blocks.filter(b => b.q).length
+  };
+}
+function guessRoles(turns) {
+  const wc = {}, qc = {};
+  turns.forEach(t => { wc[t.who] = (wc[t.who] || 0) + words(t.text); qc[t.who] = (qc[t.who] || 0) + (t.text.match(/\?/g) || []).length; });
+  const people = Object.keys(wc);
+  const interviewer = people.slice().sort((a, b) => qc[b] - qc[a])[0];
+  const cand = people.filter(p => p !== interviewer).sort((a, b) => wc[b] - wc[a])[0] || interviewer;
+  return { people, cand, interviewer };
+}
+// PARSER END
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const hl = s => esc(s).replace(NUM_HL, m => /\d|#|number/.test(m) ? "<mark>" + m + "</mark>" : m);
+const KEY = "interview-notes-v1";
+let state = { raw: "", cand: "", interviewer: "", role: "", date: "", ratings: {}, overall: 0, rec: "", notes: "", valueNotes: {} };
+let turns = [], result = null;
+
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+function toast(t) { const el = $("toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1600); }
+
+function run(fresh) {
+  turns = parseTranscript(state.raw);
+  if (turns.length < 2) { $("msg").textContent = "Couldn't find speakers in that text. Paste the full Teams transcript with names and times."; return; }
+  const g = guessRoles(turns);
+  if (fresh || !g.people.includes(state.cand)) state.cand = g.cand;
+  if (fresh || !g.people.includes(state.interviewer)) state.interviewer = g.interviewer;
+  if (!state.date) state.date = new Date().toISOString().slice(0, 10);
+  for (const [id, key] of [["candSel", "cand"], ["intSel", "interviewer"]]) {
+    $(id).innerHTML = g.people.map(p => `<option ${p === state[key] ? "selected" : ""}>${esc(p)}</option>`).join("");
+  }
+  $("role").value = state.role; $("date").value = state.date;
+  $("rec").value = state.rec; $("myNotes").value = state.notes;
+  render();
+  $("inputCard").classList.add("hidden"); $("out").classList.remove("hidden"); $("newBtn").classList.remove("hidden");
+  save();
+}
+
+function render() {
+  result = analyze(turns, state.cand, state.interviewer);
+  const r = result;
+  $("stats").innerHTML = [
+    [r.length != null ? fmt(r.length) : "n/a", "Length"],
+    [r.questions, "Questions asked"],
+    [r.talk + "%", "Candidate talk time"],
+    [r.facts.length, "Facts and numbers"]
+  ].map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+
+  $("qaList").innerHTML = r.blocks.map((b, i) => {
+    const head = b.q ? `<span class="q">${esc(b.q)}</span>` : `<span class="q muted">Opening conversation</span>`;
+    const tags = `<span class="tag cat">${b.cat}</span>` + b.values.map(v => `<span class="tag">${v}</span>`).join("") +
+      (b.star.length >= 3 ? `<span class="tag star" title="Situation, Task, Action, Result">STAR: ${b.star.join(" ")}</span>` : "");
+    const pts = b.points.length ? `<ul class="points">${b.points.map(p => `<li>${hl(p)}</li>`).join("")}</ul>` : `<ul class="points"><li class="muted">No answer captured from ${esc(state.cand)}.</li></ul>`;
+    const full = b.lines.map(l => `<div><span class="time">${fmt(l.t)}</span> <span class="who">${esc(l.who)}:</span> ${hl(l.text)}</div>`).join("");
+    return `<div class="qa"><div class="qhead"><span class="time">${fmt(b.t)}</span>${head}</div>
+      <div style="margin-left:50px">${tags}</div>${pts}
+      <details><summary>Full answer (${b.words} words)</summary><div class="full">${full}</div></details></div>`;
+  }).join("");
+
+  $("facts").innerHTML = r.facts.length ? r.facts.map(f => `<li><span class="time">${fmt(f.t)}</span> ${hl(f.s)}</li>`).join("") : `<li class="muted">No numbers found.</li>`;
+  $("candQs").innerHTML = r.candQs.length ? r.candQs.map(f => `<li><span class="time">${fmt(f.t)}</span> ${esc(f.s)}</li>`).join("") : `<li class="muted">None captured.</li>`;
+
+  $("values").innerHTML = VALUES.map(v => {
+    const ev = r.evidence[v.key].slice(0, 3);
+    const n = state.ratings[v.key] || 0;
+    return `<div class="value"><h3>${v.name}</h3>
+      <div class="rate" data-key="${v.key}">${[1, 2, 3, 4, 5].map(k => `<button class="${k === n ? "on" : ""}" data-v="${k}">${k}</button>`).join("")}</div>
+      <div class="evidence">${ev.length ? ev.map(e => `<div>${fmt(e.t)} "${esc(e.s.length > 150 ? e.s.slice(0, 147) + "..." : e.s)}"</div>`).join("") : "No direct examples found in the transcript."}</div>
+      <input data-note="${v.key}" placeholder="Note" value="${esc(state.valueNotes[v.key] || "")}"></div>`;
+  }).join("");
+  $("overall").innerHTML = [1, 2, 3, 4, 5].map(k => `<button class="${k === state.overall ? "on" : ""}" data-v="${k}">${k}</button>`).join("");
+}
+
+function notesText() {
+  const r = result, L = [];
+  L.push("INTERVIEW NOTES");
+  L.push(`Candidate: ${state.cand}`);
+  L.push(`Interviewer: ${state.interviewer}`);
+  if (state.role) L.push(`Role: ${state.role}`);
+  L.push(`Date: ${state.date}`);
+  L.push(`Length: ${r.length != null ? fmt(r.length) : "n/a"} | Candidate talk time: ${r.talk}%`);
+  L.push("");
+  L.push(`RECOMMENDATION: ${state.rec || "not set"} | Overall: ${state.overall ? state.overall + "/5" : "not rated"}`);
+  L.push("");
+  L.push("SCORECARD");
+  VALUES.forEach(v => L.push(`- ${v.name}: ${state.ratings[v.key] ? state.ratings[v.key] + "/5" : "not rated"}${state.valueNotes[v.key] ? ". " + state.valueNotes[v.key] : ""}`));
+  L.push("");
+  L.push("KEY FACTS");
+  (r.facts.length ? r.facts : [{ t: null, s: "None found" }]).forEach(f => L.push(`- ${f.t != null ? "[" + fmt(f.t) + "] " : ""}${f.s}`));
+  L.push("");
+  L.push("QUESTIONS AND ANSWERS");
+  r.blocks.filter(b => b.q).forEach((b, i) => {
+    L.push(`${i + 1}. [${fmt(b.t)}] (${b.cat}) ${b.q}`);
+    b.points.forEach(p => L.push(`   - ${p}`));
+    const meta = [b.values.length ? "Shows: " + b.values.join(", ") : "", b.star.length >= 3 ? "STAR: " + b.star.join(" ") : ""].filter(Boolean).join(" | ");
+    if (meta) L.push(`   ${meta}`);
+  });
+  L.push("");
+  L.push("QUESTIONS THE CANDIDATE ASKED");
+  (r.candQs.length ? r.candQs : [{ t: null, s: "None captured" }]).forEach(f => L.push(`- ${f.s}`));
+  if (state.notes) { L.push(""); L.push("MY NOTES"); L.push(state.notes); }
+  return L.join("\n");
+}
+
+async function readFile(f) {
+  if (/\.docx$/i.test(f.name)) return docxText(await f.arrayBuffer());
+  return f.text();
+}
+async function docxText(buf) {
+  const u8 = new Uint8Array(buf), dv = new DataView(buf);
+  let eocd = -1;
+  for (let i = u8.length - 22; i >= 0; i--) if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error("Not a valid .docx file");
+  let p = dv.getUint32(eocd + 16, true);
+  const count = dv.getUint16(eocd + 10, true);
+  for (let n = 0; n < count; n++) {
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+    const nlen = dv.getUint16(p + 28, true), elen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+    const off = dv.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(u8.slice(p + 46, p + 46 + nlen));
+    if (name === "word/document.xml") {
+      const lnl = dv.getUint16(off + 26, true), lel = dv.getUint16(off + 28, true);
+      const data = u8.slice(off + 30 + lnl + lel, off + 30 + lnl + lel + csize);
+      let xml;
+      if (method === 0) xml = new TextDecoder().decode(data);
+      else xml = await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+      return xml.replace(/<w:tab\/>/g, " ").replace(/<w:br\/>/g, "\n").replace(/<\/w:p>/g, "\n").replace(/<[^>]+>/g, "")
+        .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+    }
+    p += 46 + nlen + elen + clen;
+  }
+  throw new Error("No document text found in the .docx");
+}
+
+const SAMPLE = `Sam Carter   0:04
+Hi Jordan, thanks for joining. Can you hear me okay?
+
+Jordan Lee   0:08
+Yes, loud and clear. Thanks for having me.
+
+Sam Carter   0:12
+Great. To start, tell me a little about yourself.
+
+Jordan Lee   0:16
+Sure. I spent three years in inside sales at a home services company. I made about 90 calls a day and booked 15 appointments a week on average. Before that I worked in a call center, which is where I learned to really listen to people. I ranked number one on my team for six months straight.
+
+Sam Carter   1:20
+Nice. Tell me about a time you had to keep going after a lot of rejection.
+
+Jordan Lee   1:26
+When I started, my goal was 10 meetings a week and I was getting maybe two. I needed to change my approach. I asked my manager for feedback and recorded my own calls. I realized I was pitching too early, so I started asking two questions about their situation first. Within two months I was booking 12 meetings a week and I closed $40,000 in new business that quarter.
+
+Sam Carter   2:45
+How do you keep your pipeline organized?
+
+Jordan Lee   2:49
+I live in the CRM. Every call gets logged the same day with a next step and a date. I review my pipeline every Friday so nothing slips, and I follow up within 24 hours after every conversation.
+
+Sam Carter   3:30
+Why are you interested in Rhythm?
+
+Jordan Lee   3:34
+Honestly, my dad uses an oxygen concentrator, so I've seen how much that equipment matters. I also want a role with real coaching where I can grow into field sales.
+
+Sam Carter   4:10
+Do you have any questions for me?
+
+Jordan Lee   4:13
+Yes. What did your best rep do differently in their first 90 days? And how is success measured for this role in the first quarter?
+
+Sam Carter   4:40
+Great questions. Our best reps hit their call numbers every day and ask a lot of questions.`;
+
+// events
+$("goBtn").onclick = () => { state.raw = $("raw").value.trim(); if (!state.raw) { $("msg").textContent = "Paste or drop a transcript first."; return; } run(true); };
+$("sampleBtn").onclick = () => { $("raw").value = SAMPLE; state.raw = SAMPLE; state.role = state.role || "Business Development Specialist"; run(true); };
+$("pickBtn").onclick = () => $("file").click();
+$("file").onchange = async e => { const f = e.target.files[0]; if (f) { try { $("raw").value = await readFile(f); $("msg").textContent = "Loaded " + f.name; } catch (err) { $("msg").textContent = err.message; } } };
+const drop = $("drop");
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = async e => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (!f) return; try { $("raw").value = await readFile(f); state.raw = $("raw").value.trim(); run(true); } catch (err) { $("msg").textContent = err.message; } };
+$("candSel").onchange = e => { state.cand = e.target.value; render(); save(); };
+$("intSel").onchange = e => { state.interviewer = e.target.value; render(); save(); };
+$("role").oninput = e => { state.role = e.target.value; save(); };
+$("date").oninput = e => { state.date = e.target.value; save(); };
+$("rec").onchange = e => { state.rec = e.target.value; save(); };
+$("myNotes").oninput = e => { state.notes = e.target.value; save(); };
+$("values").onclick = e => { const b = e.target.closest("button[data-v]"); if (!b) return; const k = b.parentElement.dataset.key; state.ratings[k] = +b.dataset.v; render(); save(); };
+$("values").oninput = e => { const k = e.target.dataset.note; if (k) { state.valueNotes[k] = e.target.value; save(); } };
+$("overall").onclick = e => { const b = e.target.closest("button[data-v]"); if (!b) return; state.overall = +b.dataset.v; render(); save(); };
+$("copyBtn").onclick = async () => { try { await navigator.clipboard.writeText(notesText()); toast("Notes copied"); } catch (e) { toast("Copy blocked; use Download"); } };
+$("dlBtn").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([notesText()], { type: "text/plain" })); a.download = `Interview notes ${state.cand} ${state.date}.txt`; a.click(); };
+$("printBtn").onclick = () => { document.querySelectorAll("details").forEach(d => d.open = true); window.print(); };
+$("newBtn").onclick = () => {
+  if (!confirmNew()) return;
+  state = { raw: "", cand: "", interviewer: "", role: state.role, date: "", ratings: {}, overall: 0, rec: "", notes: "", valueNotes: {} };
+  save(); $("raw").value = ""; $("msg").textContent = "";
+  $("out").classList.add("hidden"); $("inputCard").classList.remove("hidden"); $("newBtn").classList.add("hidden");
+};
+function confirmNew() {
+  const b = $("newBtn");
+  if (b.dataset.armed) { delete b.dataset.armed; b.textContent = "New interview"; return true; }
+  b.dataset.armed = "1"; b.textContent = "Click again to clear"; setTimeout(() => { delete b.dataset.armed; b.textContent = "New interview"; }, 3000);
+  return false;
+}
+// inside a sandboxed viewer, downloads and print are blocked: show only Copy there
+try { if (window.self !== window.top) { $("dlBtn").classList.add("hidden"); $("printBtn").classList.add("hidden"); } } catch (e) { $("dlBtn").classList.add("hidden"); $("printBtn").classList.add("hidden"); }
+// restore last session
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && s.raw) { state = { ...state, ...s }; $("raw").value = s.raw; run(false); } } catch (e) {}
+</script>
+</body>
+</html>
